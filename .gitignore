@@ -1,0 +1,13 @@
+.next/
+.swc/
+.npm-cache/
+node_modules/
+coverage/
+*.log
+.claude/
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+.superpowers/
