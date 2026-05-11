@@ -1,6 +1,6 @@
 import Link from 'next/link'
 import AdSlot from '@/components/layout/AdSlot'
-import { tools } from '@/lib/tools'
+import { getRelatedTools } from '@/lib/tools'
 
 interface CalculatorLayoutProps {
   title: string
@@ -17,44 +17,53 @@ export default function CalculatorLayout({
   explainerContent,
   children
 }: CalculatorLayoutProps) {
-  const otherTools = tools.filter((tool) => tool.slug !== currentSlug)
+  const relatedTools = getRelatedTools(currentSlug)
 
   return (
-    <div className="mx-auto max-w-6xl px-4 py-10 sm:px-6">
-      <div className="max-w-2xl">
-        <h1 className="text-3xl font-bold tracking-tight text-slate-900 sm:text-4xl">{title}</h1>
-        <p className="mt-3 text-base leading-7 text-slate-600">{description}</p>
-      </div>
-
-      <div className="mt-8 flex flex-col gap-8 lg:flex-row">
-        <div className="flex-1">{children}</div>
-        <aside className="flex w-full flex-col gap-4 lg:w-80">
-          <AdSlot position="sidebar-top" />
-          <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
-            <h2 className="text-sm font-semibold uppercase tracking-[0.18em] text-slate-500">
-              다른 계산기
-            </h2>
-            <ul className="mt-4 space-y-3">
-              {otherTools.map((tool) => (
-                <li key={tool.slug}>
-                  <Link
-                    href={tool.href}
-                    className="flex items-center gap-3 rounded-xl border border-slate-100 px-3 py-3 transition hover:border-brand-500 hover:bg-brand-50"
-                  >
-                    <span className="text-2xl">{tool.icon}</span>
-                    <span className="font-medium text-slate-800">{tool.name}</span>
-                  </Link>
-                </li>
-              ))}
-            </ul>
+    <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
+      <div className="grid gap-8 xl:grid-cols-[minmax(0,0.9fr)_minmax(420px,1.1fr)]">
+        <section className="space-y-6 xl:pr-6">
+          <div className="rounded-[1.75rem] border border-white/70 bg-white/82 p-6 shadow-[0_24px_70px_rgba(15,23,42,0.05)] backdrop-blur">
+            <p className="text-sm font-semibold uppercase tracking-[0.18em] text-brand-700">Calculator</p>
+            <h1 className="mt-3 text-3xl font-semibold tracking-tight text-slate-950 sm:text-4xl">{title}</h1>
+            <p className="mt-4 max-w-2xl text-base leading-7 text-slate-600">{description}</p>
           </div>
+
+          <section className="rounded-[1.75rem] border border-slate-200 bg-white/95 p-6 shadow-[0_18px_50px_rgba(15,23,42,0.05)]">
+            <p className="text-xs font-semibold uppercase tracking-[0.18em] text-slate-500">Guide</p>
+            <div className="prose prose-slate mt-4 max-w-none text-sm leading-7">{explainerContent}</div>
+          </section>
+
+          <section className="rounded-[1.75rem] border border-slate-200 bg-white/95 p-6 shadow-[0_18px_50px_rgba(15,23,42,0.05)]">
+            <div className="flex items-center justify-between gap-4">
+              <div>
+                <p className="text-xs font-semibold uppercase tracking-[0.18em] text-slate-500">Related tools</p>
+                <h2 className="mt-2 text-2xl font-semibold tracking-tight text-slate-950">같이 보면 좋은 계산기</h2>
+              </div>
+            </div>
+
+            <div className="mt-6 grid gap-4 sm:grid-cols-2">
+              {relatedTools.map((tool) => (
+                <Link
+                  key={tool.slug}
+                  href={tool.href}
+                  className="rounded-[1.5rem] border border-slate-200 bg-slate-50/70 p-5 transition hover:border-brand-300 hover:bg-white"
+                >
+                  <p className="text-sm font-semibold tracking-[0.14em] text-brand-700">{tool.purpose}</p>
+                  <h3 className="mt-2 text-lg font-semibold text-slate-900">{tool.name}</h3>
+                  <p className="mt-2 text-sm leading-6 text-slate-600">{tool.description}</p>
+                </Link>
+              ))}
+            </div>
+          </section>
+        </section>
+
+        <aside className="space-y-5">
+          {children}
+          <AdSlot position="sidebar-top" />
           <AdSlot position="sidebar-bottom" />
         </aside>
       </div>
-
-      <section className="mt-10 rounded-3xl border border-slate-200 bg-white p-6 shadow-sm">
-        <div className="prose prose-slate max-w-none text-sm leading-7">{explainerContent}</div>
-      </section>
 
       <section className="mt-8">
         <AdSlot position="footer" />

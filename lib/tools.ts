@@ -1,75 +1,140 @@
 export interface Tool {
   slug: string
   name: string
+  shortName: string
+  purpose: string
   description: string
+  summary: string
   icon: string
   href: string
   category: 'calculator' | 'info'
+  featured: boolean
+  relatedSlugs: string[]
 }
 
 export const tools: Tool[] = [
   {
     slug: 'multa',
     name: '물타기 계산기',
-    description: '추가 매수 후 새로운 평단가를 계산합니다.',
-    icon: '📉',
+    shortName: '물타기',
+    purpose: '추가 매수 판단',
+    description: '추가 매수 뒤 평단과 총 투자금 변화를 바로 계산합니다.',
+    summary: '평단 낮추기 · 물타기 계산기',
+    icon: '◎',
     href: '/calculators/multa',
-    category: 'calculator'
-  },
-  {
-    slug: 'dividend',
-    name: '배당 계산기',
-    description: '배당수익률과 수령액을 빠르게 확인합니다.',
-    icon: '💰',
-    href: '/calculators/dividend',
-    category: 'calculator'
-  },
-  {
-    slug: 'fair-value',
-    name: '적정주가 계산기',
-    description: 'PER과 PBR 기준 적정주가를 계산합니다.',
-    icon: '📊',
-    href: '/calculators/fair-value',
-    category: 'calculator'
+    category: 'calculator',
+    featured: true,
+    relatedSlugs: ['averaging-down-target', 'return-rate', 'target-price']
   },
   {
     slug: 'return-rate',
     name: '수익률 계산기',
-    description: '평가손익과 수익률을 즉시 계산합니다.',
-    icon: '📈',
+    shortName: '수익률',
+    purpose: '수익 점검',
+    description: '평가금액, 손익, 수익률을 한 번에 점검합니다.',
+    summary: '평가손익 · 수익률 계산기',
+    icon: '↗',
     href: '/calculators/return-rate',
-    category: 'calculator'
+    category: 'calculator',
+    featured: true,
+    relatedSlugs: ['target-price', 'multa', 'fair-value']
+  },
+  {
+    slug: 'dividend',
+    name: '배당 계산기',
+    shortName: '배당',
+    purpose: '배당 예측',
+    description: '배당수익률과 월간 예상 현금흐름을 빠르게 계산합니다.',
+    summary: '배당수익률 · 현금흐름 계산기',
+    icon: '◌',
+    href: '/calculators/dividend',
+    category: 'calculator',
+    featured: true,
+    relatedSlugs: ['dividend-reinvest', 'compound-return', 'fair-value']
   },
   {
     slug: 'target-price',
-    name: '목표가/손절가 계산기',
-    description: '진입가 기준 목표가와 손절가를 계산합니다.',
-    icon: '🎯',
+    name: '목표가 계산기',
+    shortName: '목표가',
+    purpose: '목표가 확인',
+    description: '진입가 기준 목표가와 손절가를 함께 계산합니다.',
+    summary: '목표 수익률 · 손절가 계산기',
+    icon: '◇',
     href: '/calculators/target-price',
-    category: 'calculator'
+    category: 'calculator',
+    featured: true,
+    relatedSlugs: ['return-rate', 'multa', 'fair-value']
   },
   {
-    slug: 'averaging-down-target',
-    name: '추가 매수 필요 금액 계산기',
-    description: '목표 평단가에 필요한 추가 매수를 계산합니다.',
-    icon: '🧮',
-    href: '/calculators/averaging-down-target',
-    category: 'calculator'
+    slug: 'fair-value',
+    name: '적정가 계산기',
+    shortName: '적정가',
+    purpose: '적정가 추정',
+    description: 'EPS와 BPS를 바탕으로 적정가 범위를 가늠합니다.',
+    summary: 'PER · PBR 기반 적정가 계산기',
+    icon: '□',
+    href: '/calculators/fair-value',
+    category: 'calculator',
+    featured: true,
+    relatedSlugs: ['target-price', 'return-rate', 'dividend']
   },
   {
     slug: 'compound-return',
-    name: '복리 수익 계산기',
-    description: '복리 기준 미래 자산을 시뮬레이션합니다.',
-    icon: '🌱',
+    name: '복리 계산기',
+    shortName: '복리',
+    purpose: '복리 시뮬레이션',
+    description: '초기 투자금과 월 적립금으로 미래 자산을 시뮬레이션합니다.',
+    summary: '장기 적립 · 복리 성장 계산기',
+    icon: '△',
     href: '/calculators/compound-return',
-    category: 'calculator'
+    category: 'calculator',
+    featured: true,
+    relatedSlugs: ['dividend-reinvest', 'dividend', 'return-rate']
+  },
+  {
+    slug: 'averaging-down-target',
+    name: '추가 매수 계산기',
+    shortName: '추가 매수',
+    purpose: '목표 평단 맞추기',
+    description: '원하는 평단가까지 필요한 추가 수량과 금액을 계산합니다.',
+    summary: '목표 평단가 · 추가 매수 금액 계산기',
+    icon: '＋',
+    href: '/calculators/averaging-down-target',
+    category: 'calculator',
+    featured: false,
+    relatedSlugs: ['multa', 'target-price', 'return-rate']
   },
   {
     slug: 'dividend-reinvest',
     name: '배당 재투자 계산기',
-    description: '배당 재투자 시 자산 증가를 계산합니다.',
-    icon: '♻️',
+    shortName: '배당 재투자',
+    purpose: '재투자 성장 확인',
+    description: '배당 재투자 이후의 보유 수량과 자산 증가를 계산합니다.',
+    summary: '배당 복리 · 재투자 성장 계산기',
+    icon: '∞',
     href: '/calculators/dividend-reinvest',
-    category: 'calculator'
+    category: 'calculator',
+    featured: false,
+    relatedSlugs: ['dividend', 'compound-return', 'fair-value']
   }
 ]
+
+export const featuredTools = tools.filter((tool) => tool.featured)
+export const secondaryTools = tools.filter((tool) => !tool.featured)
+
+export function findToolBySlug(slug: string) {
+  return tools.find((tool) => tool.slug === slug)
+}
+
+export function getRelatedTools(slug: string) {
+  const currentTool = findToolBySlug(slug)
+
+  if (!currentTool) {
+    return []
+  }
+
+  return currentTool.relatedSlugs
+    .map((relatedSlug) => findToolBySlug(relatedSlug))
+    .filter((tool): tool is Tool => tool !== undefined)
+    .filter((tool) => tool.slug !== slug)
+}

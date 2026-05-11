@@ -4,40 +4,28 @@ import JsonLd from '@/components/JsonLd'
 import CalculatorLayout from '@/components/layout/CalculatorLayout'
 
 export const metadata: Metadata = {
-  title: '목표가 손절가 계산기 - 퍼센트 기준',
-  description:
-    '진입가와 목표 수익률, 손절률을 입력하면 목표가와 손절가를 계산할 수 있는 목표가 손절가 계산기입니다.'
+  title: '목표가 계산기 - 목표 수익률과 손절가 계산',
+  description: '진입가와 목표 수익률, 손절 비율을 입력해 목표가와 손절가를 함께 계산할 수 있습니다.'
 }
 
 const explainer = (
   <div className="space-y-4">
-    <h2 className="text-lg font-bold text-slate-900">목표가/손절가 계산기 사용법</h2>
-    <p>
-      진입 가격 기준으로 원하는 목표 수익률과 손절률을 입력하면 미리 기준 가격을 정할 수
-      있습니다. 매매 원칙을 숫자로 명확하게 잡고 싶을 때 유용합니다.
-    </p>
-    <p>
-      수익 목표와 손절 기준을 사전에 정해 두면 감정적인 매매를 줄이는 데 도움이 됩니다.
-      다만 급격한 변동성이나 갭 하락 상황에서는 계획한 가격에 체결되지 않을 수 있습니다.
-    </p>
-    <p>
-      손절가 계산과 목표가 계산은 매매 원칙을 수치로 고정할 때 유용합니다. 특히 단기 매매나
-      스윙 매매에서는 진입 전에 리스크 대비 기대 수익을 먼저 확인하는 습관이 중요합니다.
-    </p>
+    <h2 className="text-lg font-semibold text-slate-900">왜 같이 계산하나요?</h2>
+    <p>목표가와 손절가를 함께 잡아두면 매수 이후의 대응 기준을 더 분명하게 세울 수 있습니다.</p>
+    <h2 className="text-lg font-semibold text-slate-900">계산식</h2>
+    <p>목표가는 진입가에 목표 수익률을 더해 계산하고, 손절가는 진입가에서 손실 비율만큼 차감해 계산합니다.</p>
+    <h2 className="text-lg font-semibold text-slate-900">주의사항</h2>
+    <p>손절 비율은 100% 미만이어야 하며, 실제 매매에서는 수수료와 슬리피지까지 함께 고려하는 것이 좋습니다.</p>
   </div>
 )
 
 export default function TargetPricePage() {
   return (
     <>
-      <JsonLd
-        name="목표가 손절가 계산기"
-        description="진입가 기준 목표가와 손절가를 계산합니다."
-        path="/calculators/target-price"
-      />
+      <JsonLd name="목표가 계산기" description="목표가와 손절가를 함께 계산하는 매매 기준 도구" path="/calculators/target-price" />
       <CalculatorLayout
-        title="목표가/손절가 계산기"
-        description="진입가 기준 목표가와 손절가를 빠르게 계산합니다."
+        title="목표가 계산기"
+        description="진입가 기준 목표가와 손절가를 함께 계산해 매도 기준을 미리 정리합니다."
         currentSlug="target-price"
         explainerContent={explainer}
       >

@@ -2,9 +2,22 @@
 
 import { useState } from 'react'
 import { calcMulta, type MultaInput } from '@/lib/calculations'
-import { CalculatorField, ResultCard } from '@/components/calculators/shared'
+import {
+  CalculatorActionButton,
+  CalculatorError,
+  CalculatorField,
+  CalculatorSection,
+  CurrencySelector,
+  EmptyResult,
+  ResultCard,
+  formatCurrency,
+  getCurrencyExample,
+  getCurrencyLabel,
+  useStoredCurrency
+} from '@/components/calculators/shared'
 
 export default function MultaCalculator() {
+  const [currency, setCurrency] = useStoredCurrency()
   const [avgPrice, setAvgPrice] = useState('')
   const [qty, setQty] = useState('')
   const [addPrice, setAddPrice] = useState('')
@@ -42,31 +55,52 @@ export default function MultaCalculator() {
     setResult(calcMulta(input))
   }
 
+  const moneyExample = getCurrencyExample(currency)
+  const currencyLabel = getCurrencyLabel(currency)
+
   return (
-    <div className="rounded-[2rem] border border-slate-200 bg-white p-6 shadow-sm">
-      <div className="grid gap-4 sm:grid-cols-2">
-        <CalculatorField label="현재 평단가 (원)" value={avgPrice} onChange={setAvgPrice} placeholder="50000" />
-        <CalculatorField label="보유 수량 (주)" value={qty} onChange={setQty} placeholder="100" step="1" />
-        <CalculatorField label="추가 매수가 (원)" value={addPrice} onChange={setAddPrice} placeholder="40000" />
-        <CalculatorField label="추가 수량 (주)" value={addQty} onChange={setAddQty} placeholder="50" step="1" />
-      </div>
-
-      <button
-        onClick={handleCalc}
-        className="mt-6 w-full rounded-xl bg-brand-600 py-3 text-sm font-semibold text-white transition hover:bg-brand-700"
+    <div className="grid gap-5">
+      <CalculatorSection
+        eyebrow="Input"
+        title="현재 보유와 추가 매수 조건을 입력하세요"
+        description="현재 평단가와 추가 매수 가격을 바탕으로 새 평단과 총 투자금 변화를 계산합니다."
       >
-        계산하기
-      </button>
-
-      {error ? <p className="mt-4 text-sm text-rose-600">{error}</p> : null}
-
-      {result ? (
-        <div className="mt-6 grid gap-4 sm:grid-cols-3">
-          <ResultCard label="새 평단가" value={`${Math.round(result.newAvgPrice).toLocaleString('ko-KR')}원`} tone="blue" />
-          <ResultCard label="총 투자금" value={`${Math.round(result.totalInvestment).toLocaleString('ko-KR')}원`} tone="slate" />
-          <ResultCard label="손익분기점" value={`${Math.round(result.breakEven).toLocaleString('ko-KR')}원`} tone="green" />
+        <div className="mb-5 flex items-center justify-between gap-4">
+          <div>
+            <p className="text-sm font-medium text-slate-800">표시 통화</p>
+            <p className="mt-1 text-xs text-slate-500">입력 예시와 결과 금액이 함께 바뀝니다.</p>
+          </div>
+          <CurrencySelector value={currency} onChange={setCurrency} />
         </div>
-      ) : null}
+
+        <div className="grid gap-4 sm:grid-cols-2">
+          <CalculatorField label={`현재 평단가 (${currencyLabel})`} value={avgPrice} onChange={setAvgPrice} placeholder="50000" helpText={`보유 중인 주식의 평균 매입 단가 · ${moneyExample}`} />
+          <CalculatorField label="보유 수량" value={qty} onChange={setQty} placeholder="100" step="1" helpText="현재 들고 있는 주식 수량" />
+          <CalculatorField label={`추가 매수가 (${currencyLabel})`} value={addPrice} onChange={setAddPrice} placeholder="40000" helpText={`새로 매수하려는 가격 · ${moneyExample}`} />
+          <CalculatorField label="추가 수량" value={addQty} onChange={setAddQty} placeholder="50" step="1" helpText="추가로 살 주식 수량" />
+        </div>
+
+        <div className="mt-6 space-y-4">
+          <CalculatorActionButton onClick={handleCalc}>새 평단 계산하기</CalculatorActionButton>
+          {error ? <CalculatorError>{error}</CalculatorError> : null}
+        </div>
+      </CalculatorSection>
+
+      <CalculatorSection
+        eyebrow="Result"
+        title="추가 매수 이후의 평균 단가"
+        description="핵심 숫자와 함께 매수 뒤 포지션이 어떻게 달라지는지 한 번에 확인합니다."
+      >
+        {result ? (
+          <div className="grid gap-4 sm:grid-cols-3">
+            <ResultCard label="새 평단가" value={formatCurrency(result.newAvgPrice, currency)} tone="muted" detail="추가 매수까지 반영한 평균 매입 단가" />
+            <ResultCard label="총 투자금" value={formatCurrency(result.totalInvestment, currency)} tone="default" detail="기존 보유분과 추가 매수분을 합친 금액" />
+            <ResultCard label="손익분기 가격" value={formatCurrency(result.breakEven, currency)} tone="positive" detail="수수료를 제외한 단순 기준의 분기 가격" />
+          </div>
+        ) : (
+          <EmptyResult title="입력값을 넣으면 새 평단이 여기에 표시됩니다." description="보유 평단가와 추가 매수 조건을 입력한 뒤 계산 버튼을 눌러 주세요." />
+        )}
+      </CalculatorSection>
     </div>
   )
 }

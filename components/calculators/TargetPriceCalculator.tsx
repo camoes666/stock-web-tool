@@ -1,10 +1,23 @@
 'use client'
 
 import { useState } from 'react'
-import { CalculatorField, ResultCard } from '@/components/calculators/shared'
 import { calcTargetPrice, type TargetPriceInput } from '@/lib/calculations'
+import {
+  CalculatorActionButton,
+  CalculatorError,
+  CalculatorField,
+  CalculatorSection,
+  CurrencySelector,
+  EmptyResult,
+  ResultCard,
+  formatCurrency,
+  getCurrencyExample,
+  getCurrencyLabel,
+  useStoredCurrency
+} from '@/components/calculators/shared'
 
 export default function TargetPriceCalculator() {
+  const [currency, setCurrency] = useStoredCurrency()
   const [entryPrice, setEntryPrice] = useState('')
   const [profitPercent, setProfitPercent] = useState('')
   const [lossPercent, setLossPercent] = useState('')
@@ -31,7 +44,7 @@ export default function TargetPriceCalculator() {
     }
 
     if (input.lossPercent >= 100) {
-      setError('손절률은 100보다 작아야 합니다.')
+      setError('손절 비율은 100%보다 작아야 합니다.')
       setResult(null)
       return
     }
@@ -40,29 +53,50 @@ export default function TargetPriceCalculator() {
     setResult(calcTargetPrice(input))
   }
 
+  const moneyExample = getCurrencyExample(currency)
+  const currencyLabel = getCurrencyLabel(currency)
+
   return (
-    <div className="rounded-[2rem] border border-slate-200 bg-white p-6 shadow-sm">
-      <div className="grid gap-4 sm:grid-cols-3">
-        <CalculatorField label="진입가 (원)" value={entryPrice} onChange={setEntryPrice} placeholder="50000" />
-        <CalculatorField label="목표 수익률 (%)" value={profitPercent} onChange={setProfitPercent} placeholder="12" />
-        <CalculatorField label="손절률 (%)" value={lossPercent} onChange={setLossPercent} placeholder="7" />
-      </div>
-
-      <button
-        onClick={handleCalc}
-        className="mt-6 w-full rounded-xl bg-violet-600 py-3 text-sm font-semibold text-white transition hover:bg-violet-700"
+    <div className="grid gap-5">
+      <CalculatorSection
+        eyebrow="Input"
+        title="목표 수익률과 손절 기준을 입력하세요"
+        description="진입가를 기준으로 목표가와 손절가를 함께 계산해 매도 기준을 미리 정리할 수 있습니다."
       >
-        계산하기
-      </button>
-
-      {error ? <p className="mt-4 text-sm text-rose-600">{error}</p> : null}
-
-      {result ? (
-        <div className="mt-6 grid gap-4 sm:grid-cols-2">
-          <ResultCard label="목표가" value={`${Math.round(result.targetPrice).toLocaleString('ko-KR')}원`} tone="green" />
-          <ResultCard label="손절가" value={`${Math.round(result.stopLossPrice).toLocaleString('ko-KR')}원`} tone="rose" />
+        <div className="mb-5 flex items-center justify-between gap-4">
+          <div>
+            <p className="text-sm font-medium text-slate-800">표시 통화</p>
+            <p className="mt-1 text-xs text-slate-500">진입가, 목표가, 손절가를 같은 통화 기준으로 볼 수 있습니다.</p>
+          </div>
+          <CurrencySelector value={currency} onChange={setCurrency} />
         </div>
-      ) : null}
+
+        <div className="grid gap-4 sm:grid-cols-3">
+          <CalculatorField label={`진입가 (${currencyLabel})`} value={entryPrice} onChange={setEntryPrice} placeholder="50000" helpText={`포지션에 진입한 가격 · ${moneyExample}`} />
+          <CalculatorField label="목표 수익률" value={profitPercent} onChange={setProfitPercent} placeholder="12" helpText="도달하고 싶은 수익률(%)" />
+          <CalculatorField label="손절 비율" value={lossPercent} onChange={setLossPercent} placeholder="7" helpText="허용할 손실 비율(%)" />
+        </div>
+
+        <div className="mt-6 space-y-4">
+          <CalculatorActionButton onClick={handleCalc}>목표가 계산하기</CalculatorActionButton>
+          {error ? <CalculatorError>{error}</CalculatorError> : null}
+        </div>
+      </CalculatorSection>
+
+      <CalculatorSection
+        eyebrow="Result"
+        title="미리 잡아두는 매도 기준"
+        description="익절 기준과 손절 기준을 함께 보면 다음 매매 계획을 더 분명하게 세울 수 있습니다."
+      >
+        {result ? (
+          <div className="grid gap-4 sm:grid-cols-2">
+            <ResultCard label="목표가" value={formatCurrency(result.targetPrice, currency)} tone="positive" detail="목표 수익률에 도달하는 가격" />
+            <ResultCard label="손절가" value={formatCurrency(result.stopLossPrice, currency)} tone="negative" detail="허용 손실 비율 기준의 가격" />
+          </div>
+        ) : (
+          <EmptyResult title="목표가와 손절가가 여기에 표시됩니다." description="진입가와 목표 수익률, 손절 비율을 입력한 뒤 계산해 보세요." />
+        )}
+      </CalculatorSection>
     </div>
   )
 }

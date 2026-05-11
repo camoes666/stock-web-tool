@@ -27,9 +27,9 @@ export default function AdSlot({ position, slotId }: AdSlotProps) {
 
   return (
     <div
-      className={`${sizeMap[position]} flex w-full items-center justify-center rounded-2xl border border-dashed border-slate-300 bg-slate-50 px-4 text-center text-xs text-slate-400`}
+      className={`${sizeMap[position]} flex w-full items-center justify-center rounded-[1.5rem] border border-dashed border-slate-300 bg-white/70 px-4 text-center text-xs text-slate-400`}
     >
-      광고 슬롯 ({position})
+      광고 영역 ({position})
     </div>
   )
 }

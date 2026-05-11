@@ -12,3 +12,5 @@ coverage/
 .env.production.local
 .superpowers/
 .worktrees/
+
+.vercel

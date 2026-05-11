@@ -4,40 +4,28 @@ import JsonLd from '@/components/JsonLd'
 import CalculatorLayout from '@/components/layout/CalculatorLayout'
 
 export const metadata: Metadata = {
-  title: '복리 계산기 - 투자 수익 시뮬레이션',
-  description:
-    '초기금액, 월 적립액, 연 수익률, 투자 기간을 기준으로 미래 자산과 예상 수익을 계산하는 복리 계산기입니다.'
+  title: '복리 계산기 - 장기 적립식 투자 시뮬레이션',
+  description: '초기 투자금과 월 적립금, 기대 수익률을 입력해 장기 복리 성장 결과를 계산할 수 있습니다.'
 }
 
 const explainer = (
   <div className="space-y-4">
-    <h2 className="text-lg font-bold text-slate-900">복리 수익 계산기 사용법</h2>
-    <p>
-      초기 투자금과 월 적립액, 기대 수익률, 투자 기간을 입력하면 복리 기준 미래 자산을
-      추정할 수 있습니다. 장기 투자와 적립식 투자 계획을 세울 때 특히 유용합니다.
-    </p>
-    <p>
-      계산은 연 수익률을 월 복리 기준으로 환산해 진행합니다. 실제 수익률은 매년 일정하지
-      않기 때문에 결과는 참고용 시뮬레이션으로 활용하는 것이 좋습니다.
-    </p>
-    <p>
-      복리 계산은 장기 투자 계획을 세울 때 특히 유용합니다. 초기 투자금뿐 아니라 월 적립액을
-      함께 반영하면 적립식 투자에서 시간이 주는 효과를 더 현실적으로 볼 수 있습니다.
-    </p>
+    <h2 className="text-lg font-semibold text-slate-900">왜 필요한가요?</h2>
+    <p>복리 계산기는 장기 적립식 투자에서 시간이 얼마나 큰 차이를 만드는지 가늠할 때 가장 직관적인 도구입니다.</p>
+    <h2 className="text-lg font-semibold text-slate-900">계산 방식</h2>
+    <p>초기 투자금과 월 적립금에 연 수익률을 월 단위로 반영해 기간이 끝날 때의 자산을 계산합니다.</p>
+    <h2 className="text-lg font-semibold text-slate-900">주의사항</h2>
+    <p>실제 투자 수익률은 매년 달라질 수 있으므로 이 결과는 일정한 기대 수익률을 가정한 단순 시뮬레이션으로 보세요.</p>
   </div>
 )
 
 export default function CompoundReturnPage() {
   return (
     <>
-      <JsonLd
-        name="복리 수익 계산기"
-        description="복리 기준 미래 자산을 시뮬레이션합니다."
-        path="/calculators/compound-return"
-      />
+      <JsonLd name="복리 계산기" description="장기 적립식 투자와 복리 성장을 계산하는 도구" path="/calculators/compound-return" />
       <CalculatorLayout
-        title="복리 수익 계산기"
-        description="복리 기준 미래 자산과 예상 수익을 계산합니다."
+        title="복리 계산기"
+        description="초기 투자금과 월 적립금을 바탕으로 장기 복리 성장 결과를 시뮬레이션합니다."
         currentSlug="compound-return"
         explainerContent={explainer}
       >

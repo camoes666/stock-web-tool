@@ -4,28 +4,18 @@ import JsonLd from '@/components/JsonLd'
 import CalculatorLayout from '@/components/layout/CalculatorLayout'
 
 export const metadata: Metadata = {
-  title: '추가매수 계산기 - 목표 평단가 맞추기',
-  description:
-    '목표 평단가까지 낮추기 위해 필요한 추가 수량과 매수 금액을 계산할 수 있는 추가매수 계산기입니다.'
+  title: '추가 매수 계산기 - 목표 평단가 맞추기',
+  description: '현재 평단가와 현재가, 목표 평단가를 입력해 필요한 추가 수량과 금액을 계산할 수 있습니다.'
 }
 
 const explainer = (
   <div className="space-y-4">
-    <h2 className="text-lg font-bold text-slate-900">추가 매수 필요 금액 계산기 사용법</h2>
-    <p>
-      현재 평단가와 보유 수량, 현재가, 목표 평단가를 입력하면 목표 평단가까지 낮추기 위해
-      필요한 추가 수량과 금액을 계산합니다. 물타기 전략을 더 구체적으로 계획할 때
-      유용합니다.
-    </p>
-    <p>
-      목표 평단가는 현재가보다 높고 현재 평단가보다 낮아야 계산할 수 있습니다. 실제 매수
-      전에는 종목의 하락 이유가 일시적인지 반드시 다시 확인하는 것이 좋습니다.
-    </p>
-    <p>
-      추가 매수 필요 금액 계산은 “얼마를 더 사야 평단가가 내려가는지”를 구체적으로 보는
-      용도입니다. 단순히 평단가를 낮추는 것보다 총 투자금이 얼마나 늘어나는지도 함께 보는
-      것이 중요합니다.
-    </p>
+    <h2 className="text-lg font-semibold text-slate-900">무엇을 계산하나요?</h2>
+    <p>원하는 목표 평단가에 도달하기 위해 현재 가격에서 얼마나 더 매수해야 하는지 수량과 금액 기준으로 계산합니다.</p>
+    <h2 className="text-lg font-semibold text-slate-900">계산 조건</h2>
+    <p>목표 평단가는 현재가보다 높고 현재 평단가보다는 낮은 구간이어야 현실적인 물타기 시나리오가 됩니다.</p>
+    <h2 className="text-lg font-semibold text-slate-900">활용 팁</h2>
+    <p>물타기 계산기와 함께 보면 추가 매수 전후의 평단 변화와 필요한 자금을 한 흐름에서 비교할 수 있습니다.</p>
   </div>
 )
 
@@ -33,13 +23,13 @@ export default function AveragingDownTargetPage() {
   return (
     <>
       <JsonLd
-        name="추가 매수 필요 금액 계산기"
-        description="목표 평단가까지 필요한 추가 매수를 계산합니다."
+        name="추가 매수 계산기"
+        description="목표 평단가에 필요한 추가 매수 수량과 금액을 계산하는 도구"
         path="/calculators/averaging-down-target"
       />
       <CalculatorLayout
-        title="추가 매수 필요 금액 계산기"
-        description="목표 평단가까지 필요한 추가 수량과 금액을 계산합니다."
+        title="추가 매수 계산기"
+        description="목표 평단가까지 낮추기 위해 필요한 추가 수량과 금액을 계산합니다."
         currentSlug="averaging-down-target"
         explainerContent={explainer}
       >

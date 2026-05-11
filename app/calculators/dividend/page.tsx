@@ -4,41 +4,28 @@ import JsonLd from '@/components/JsonLd'
 import CalculatorLayout from '@/components/layout/CalculatorLayout'
 
 export const metadata: Metadata = {
-  title: '배당 계산기 - 배당수익률 및 연간 수령액',
-  description:
-    '주가, 주당 배당금, 보유 수량을 입력하면 배당수익률, 연간 수령액, 월 환산액을 계산할 수 있는 배당 계산기입니다.'
+  title: '배당 계산기 - 배당수익률과 예상 현금흐름 계산',
+  description: '현재 주가와 주당 배당금, 보유 수량을 입력해 배당수익률과 월간 예상 현금흐름을 계산할 수 있습니다.'
 }
 
 const explainer = (
   <div className="space-y-4">
-    <h2 className="text-lg font-bold text-slate-900">배당 계산기 사용법</h2>
-    <p>
-      주당 배당금과 현재 주가를 기준으로 배당수익률을 계산하고, 보유 수량에 따른 연간
-      수령액과 월 환산액을 함께 보여줍니다.
-    </p>
-    <p>
-      월 환산액은 연간 수령액을 12로 나눈 참고 수치입니다. 실제 배당 지급 시점과 횟수는
-      종목마다 다를 수 있으니 일정 확인이 필요합니다.
-    </p>
-    <p>
-      배당수익률 계산은 현재 주가 대비 배당 매력을 빠르게 비교할 때 유용합니다. 다만 높은
-      배당수익률이 항상 좋은 투자 기회를 의미하는 것은 아니므로 배당 지속 가능성과 실적도
-      함께 살펴보는 것이 좋습니다.
-    </p>
+    <h2 className="text-lg font-semibold text-slate-900">무엇을 볼 수 있나요?</h2>
+    <p>배당수익률과 함께 연간, 월간 기준의 예상 현금흐름을 나눠 볼 수 있어 배당 중심 투자 계획을 세우기 좋습니다.</p>
+    <h2 className="text-lg font-semibold text-slate-900">계산식</h2>
+    <p>배당수익률은 주당 배당금을 현재 주가로 나눠 계산하고, 연간 배당금은 보유 수량을 곱해 산출합니다.</p>
+    <h2 className="text-lg font-semibold text-slate-900">활용 팁</h2>
+    <p>배당 재투자 계산기와 함께 보면 현금흐름뿐 아니라 장기 복리 효과까지 한 번에 비교할 수 있습니다.</p>
   </div>
 )
 
 export default function DividendPage() {
   return (
     <>
-      <JsonLd
-        name="배당 계산기"
-        description="배당수익률과 연간 수령액을 바로 계산합니다."
-        path="/calculators/dividend"
-      />
+      <JsonLd name="배당 계산기" description="배당수익률과 예상 배당금을 계산하는 주식 도구" path="/calculators/dividend" />
       <CalculatorLayout
         title="배당 계산기"
-        description="배당수익률, 연간 수령액, 월 환산액을 빠르게 확인합니다."
+        description="배당수익률과 예상 배당 현금흐름을 빠르게 계산합니다."
         currentSlug="dividend"
         explainerContent={explainer}
       >

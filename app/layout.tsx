@@ -13,10 +13,10 @@ const BASE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000'
 export const metadata: Metadata = {
   metadataBase: new URL(BASE_URL),
   title: {
-    default: '주식 계산기 모음 - 로그인 없이 바로 사용',
+    default: '주식 계산기 모음 - 로그인 없이 바로 사용하는 투자 도구',
     template: '%s | 주식 계산기'
   },
-  description: '물타기, 배당, 적정주가 계산기를 무료로 제공합니다. 로그인 없이 바로 사용하세요.'
+  description: '물타기, 수익률, 배당, 적정가 계산기를 로그인 없이 바로 사용할 수 있는 투자 도구 모음입니다.'
 }
 
 export default function RootLayout({
@@ -27,8 +27,7 @@ export default function RootLayout({
   return (
     <html lang="ko">
       <head>
-        {/* 애드센스 승인 후 ca-pub-XXXX 값을 채우고 주석 해제 */}
-        {/* <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-XXXX" crossOrigin="anonymous" /> */}
+        {/* AdSense client script can be re-enabled after production configuration. */}
       </head>
       <body className={notoSansKr.className}>
         <Navbar />
