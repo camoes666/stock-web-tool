@@ -58,6 +58,10 @@ export default function RootLayout({
   return (
     <html lang="ko">
       <head>
+        <meta
+          name="naver-site-verification"
+          content="103859e91915ff64b87f9496cb9fe2188d86d8d8"
+        />
         <Script
           src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6731103569114139"
           crossOrigin="anonymous"
