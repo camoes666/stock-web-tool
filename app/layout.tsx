@@ -13,6 +13,8 @@ const notoSansKr = Noto_Sans_KR({
 
 const BASE_URL = getSiteUrl()
 const GA_MEASUREMENT_ID = process.env.NEXT_PUBLIC_GA_ID || 'G-JVF3BC2W1H'
+const HOME_META_DESCRIPTION =
+  '물타기·수익률·배당·목표가를 로그인 없이 계산하는 주식 계산기 허브'
 
 export const metadata: Metadata = {
   metadataBase: new URL(BASE_URL),
@@ -20,8 +22,7 @@ export const metadata: Metadata = {
     default: '주식 계산기 모음 - 로그인 없이 바로 사용하는 투자 도구',
     template: '%s | 주식 계산기'
   },
-  description:
-    '물타기, 수익률, 배당, 목표가, 적정가 계산기를 로그인 없이 바로 사용할 수 있는 주식 계산기 허브입니다.',
+  description: HOME_META_DESCRIPTION,
   alternates: {
     canonical: '/'
   },
@@ -30,8 +31,7 @@ export const metadata: Metadata = {
     url: '/',
     siteName: 'Stock Web Tools',
     title: '주식 계산기 모음 - 로그인 없이 바로 사용하는 투자 도구',
-    description:
-      '물타기, 수익률, 배당, 목표가, 적정가 계산기를 로그인 없이 바로 사용할 수 있는 주식 계산기 허브입니다.',
+    description: HOME_META_DESCRIPTION,
     images: [
       {
         url: '/opengraph-image',
@@ -44,8 +44,7 @@ export const metadata: Metadata = {
   twitter: {
     card: 'summary_large_image',
     title: '주식 계산기 모음 - 로그인 없이 바로 사용하는 투자 도구',
-    description:
-      '물타기, 수익률, 배당, 목표가, 적정가 계산기를 로그인 없이 바로 사용할 수 있는 주식 계산기 허브입니다.',
+    description: HOME_META_DESCRIPTION,
     images: ['/opengraph-image']
   }
 }

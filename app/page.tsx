@@ -6,8 +6,7 @@ import { featuredTools, secondaryTools } from '@/lib/tools'
 
 export const metadata: Metadata = {
   title: '주식 계산기 모음 - 로그인 없이 바로 사용하는 투자 도구',
-  description:
-    '물타기, 수익률, 배당, 목표가, 적정가, 복리 계산기를 한곳에서 빠르게 사용할 수 있는 주식 계산기 허브입니다. 로그인 없이 바로 계산하고 투자 판단에 필요한 핵심 수치를 확인할 수 있습니다.'
+  description: '물타기·수익률·배당·목표가를 로그인 없이 계산하는 주식 계산기 허브'
 }
 
 export default function HomePage() {
