@@ -1,5 +1,6 @@
 import type { Metadata } from 'next'
 import { Noto_Sans_KR } from 'next/font/google'
+import Script from 'next/script'
 import Navbar from '@/components/layout/Navbar'
 import { getSiteUrl } from '@/lib/site'
 import './globals.css'
@@ -10,6 +11,7 @@ const notoSansKr = Noto_Sans_KR({
 })
 
 const BASE_URL = getSiteUrl()
+const GA_MEASUREMENT_ID = process.env.NEXT_PUBLIC_GA_ID || 'G-JVF3BC2W1H'
 
 export const metadata: Metadata = {
   metadataBase: new URL(BASE_URL),
@@ -29,6 +31,18 @@ export default function RootLayout({
     <html lang="ko">
       <head>
         {/* AdSense client script can be re-enabled after production configuration. */}
+        <Script
+          src={`https://www.googletagmanager.com/gtag/js?id=${GA_MEASUREMENT_ID}`}
+          strategy="afterInteractive"
+        />
+        <Script id="google-analytics" strategy="afterInteractive">
+          {`
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+            gtag('config', '${GA_MEASUREMENT_ID}');
+          `}
+        </Script>
       </head>
       <body className={notoSansKr.className}>
         <Navbar />
