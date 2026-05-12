@@ -20,7 +20,34 @@ export const metadata: Metadata = {
     default: '주식 계산기 모음 - 로그인 없이 바로 사용하는 투자 도구',
     template: '%s | 주식 계산기'
   },
-  description: '물타기, 수익률, 배당, 적정가 계산기를 로그인 없이 바로 사용할 수 있는 투자 도구 모음입니다.'
+  description:
+    '물타기, 수익률, 배당, 목표가, 적정가 계산기를 로그인 없이 바로 사용할 수 있는 주식 계산기 허브입니다.',
+  alternates: {
+    canonical: '/'
+  },
+  openGraph: {
+    type: 'website',
+    url: '/',
+    siteName: 'Stock Web Tools',
+    title: '주식 계산기 모음 - 로그인 없이 바로 사용하는 투자 도구',
+    description:
+      '물타기, 수익률, 배당, 목표가, 적정가 계산기를 로그인 없이 바로 사용할 수 있는 주식 계산기 허브입니다.',
+    images: [
+      {
+        url: '/opengraph-image',
+        width: 1200,
+        height: 630,
+        alt: 'Stock Web Tools 공유 이미지'
+      }
+    ]
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: '주식 계산기 모음 - 로그인 없이 바로 사용하는 투자 도구',
+    description:
+      '물타기, 수익률, 배당, 목표가, 적정가 계산기를 로그인 없이 바로 사용할 수 있는 주식 계산기 허브입니다.',
+    images: ['/opengraph-image']
+  }
 }
 
 export default function RootLayout({

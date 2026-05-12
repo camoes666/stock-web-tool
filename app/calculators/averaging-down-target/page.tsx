@@ -5,7 +5,8 @@ import CalculatorLayout from '@/components/layout/CalculatorLayout'
 
 export const metadata: Metadata = {
   title: '추가 매수 계산기 - 목표 평단가 맞추기',
-  description: '현재 평단가와 현재가, 목표 평단가를 입력해 필요한 추가 수량과 금액을 계산할 수 있습니다.'
+  description:
+    '현재 평단가와 현재가, 목표 평단가를 입력하면 필요한 추가 수량과 금액을 계산할 수 있습니다. 원하는 평균단가까지 얼마나 더 매수해야 하는지 확인할 때 유용합니다.'
 }
 
 const explainer = (

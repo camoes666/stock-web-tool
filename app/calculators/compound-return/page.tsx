@@ -5,7 +5,8 @@ import CalculatorLayout from '@/components/layout/CalculatorLayout'
 
 export const metadata: Metadata = {
   title: '복리 계산기 - 장기 적립식 투자 시뮬레이션',
-  description: '초기 투자금과 월 적립금, 기대 수익률을 입력해 장기 복리 성장 결과를 계산할 수 있습니다.'
+  description:
+    '초기 투자금과 월 적립금, 기대 수익률, 투자 기간을 입력하면 장기 복리 성장 결과를 계산할 수 있습니다. 적립식 투자 시나리오를 점검할 때 유용합니다.'
 }
 
 const explainer = (

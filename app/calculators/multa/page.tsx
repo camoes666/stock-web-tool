@@ -5,7 +5,8 @@ import CalculatorLayout from '@/components/layout/CalculatorLayout'
 
 export const metadata: Metadata = {
   title: '물타기 계산기 - 추가 매수 뒤 평단가 계산',
-  description: '현재 평단가와 보유 수량, 추가 매수 가격을 입력하면 새 평단가와 총 투자금을 계산할 수 있습니다.'
+  description:
+    '현재 평단가와 보유 수량, 추가 매수 가격을 입력하면 새 평단가와 총 투자금을 계산할 수 있습니다. 추가 매수 전 평균단가 변화를 빠르게 확인할 때 유용합니다.'
 }
 
 const explainer = (

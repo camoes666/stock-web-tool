@@ -5,7 +5,8 @@ import CalculatorLayout from '@/components/layout/CalculatorLayout'
 
 export const metadata: Metadata = {
   title: '목표가 계산기 - 목표 수익률과 손절가 계산',
-  description: '진입가와 목표 수익률, 손절 비율을 입력해 목표가와 손절가를 함께 계산할 수 있습니다.'
+  description:
+    '진입가와 목표 수익률, 손절 비율을 입력하면 목표가와 손절가를 함께 계산할 수 있습니다. 익절과 손절 기준을 미리 정할 때 유용합니다.'
 }
 
 const explainer = (

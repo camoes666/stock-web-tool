@@ -5,7 +5,8 @@ import CalculatorLayout from '@/components/layout/CalculatorLayout'
 
 export const metadata: Metadata = {
   title: '수익률 계산기 - 평가손익과 수익률 계산',
-  description: '매수 단가와 현재 가격, 보유 수량을 입력해 평가금액과 손익, 수익률을 계산할 수 있습니다.'
+  description:
+    '매수 단가와 현재 가격, 보유 수량을 입력하면 평가금액과 손익, 수익률을 계산할 수 있습니다. 현재 포지션의 성과를 빠르게 점검할 때 유용합니다.'
 }
 
 const explainer = (

@@ -5,7 +5,8 @@ import CalculatorLayout from '@/components/layout/CalculatorLayout'
 
 export const metadata: Metadata = {
   title: '배당 재투자 계산기 - 배당 복리 성장 계산',
-  description: '주가와 배당금, 보유 수량, 투자 기간을 입력해 배당 재투자 이후의 자산 증가를 계산할 수 있습니다.'
+  description:
+    '주가와 배당금, 보유 수량, 투자 기간을 입력하면 배당 재투자 이후의 자산 증가를 계산할 수 있습니다. 배당 복리 효과를 가늠할 때 유용합니다.'
 }
 
 const explainer = (

@@ -5,7 +5,8 @@ import CalculatorLayout from '@/components/layout/CalculatorLayout'
 
 export const metadata: Metadata = {
   title: '적정가 계산기 - PER PBR 기반 적정가 추정',
-  description: 'EPS, BPS와 목표 PER, PBR을 입력해 종목의 적정가 범위를 추정할 수 있습니다.'
+  description:
+    'EPS, BPS와 목표 PER, PBR을 입력하면 종목의 적정가 범위를 추정할 수 있습니다. 밸류에이션 기준 가격대를 빠르게 확인할 때 유용합니다.'
 }
 
 const explainer = (

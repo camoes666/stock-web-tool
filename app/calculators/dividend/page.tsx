@@ -5,7 +5,8 @@ import CalculatorLayout from '@/components/layout/CalculatorLayout'
 
 export const metadata: Metadata = {
   title: '배당 계산기 - 배당수익률과 예상 현금흐름 계산',
-  description: '현재 주가와 주당 배당금, 보유 수량을 입력해 배당수익률과 월간 예상 현금흐름을 계산할 수 있습니다.'
+  description:
+    '현재 주가와 주당 배당금, 보유 수량을 입력하면 배당수익률과 예상 배당 현금흐름을 계산할 수 있습니다. 배당주 투자 흐름을 점검할 때 유용합니다.'
 }
 
 const explainer = (
