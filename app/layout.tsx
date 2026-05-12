@@ -58,7 +58,11 @@ export default function RootLayout({
   return (
     <html lang="ko">
       <head>
-        {/* AdSense client script can be re-enabled after production configuration. */}
+        <Script
+          src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6731103569114139"
+          crossOrigin="anonymous"
+          strategy="afterInteractive"
+        />
         <Script
           src={`https://www.googletagmanager.com/gtag/js?id=${GA_MEASUREMENT_ID}`}
           strategy="afterInteractive"
