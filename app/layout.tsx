@@ -1,6 +1,7 @@
 import type { Metadata } from 'next'
 import { Noto_Sans_KR } from 'next/font/google'
 import Navbar from '@/components/layout/Navbar'
+import { getSiteUrl } from '@/lib/site'
 import './globals.css'
 
 const notoSansKr = Noto_Sans_KR({
@@ -8,7 +9,7 @@ const notoSansKr = Noto_Sans_KR({
   weight: ['400', '500', '700']
 })
 
-const BASE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000'
+const BASE_URL = getSiteUrl()
 
 export const metadata: Metadata = {
   metadataBase: new URL(BASE_URL),
