@@ -2,6 +2,7 @@ import type { Metadata } from 'next'
 import { Noto_Sans_KR } from 'next/font/google'
 import Script from 'next/script'
 import Navbar from '@/components/layout/Navbar'
+import SiteFooter from '@/components/layout/SiteFooter'
 import { getSiteUrl } from '@/lib/site'
 import './globals.css'
 
@@ -44,9 +45,10 @@ export default function RootLayout({
           `}
         </Script>
       </head>
-      <body className={notoSansKr.className}>
+      <body className={`${notoSansKr.className} flex min-h-screen flex-col`}>
         <Navbar />
-        <main>{children}</main>
+        <main className="flex-1">{children}</main>
+        <SiteFooter />
       </body>
     </html>
   )
