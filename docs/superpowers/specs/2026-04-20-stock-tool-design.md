@@ -24,6 +24,7 @@ Google AdSense 광고 수익을 목표로 SEO 최적화된 계산기 독립 페�
 ### MVP 범위 명시
 - 이번 버전은 물타기/배당/적정가/수익률/목표가-손절가/추가 매수 필요 금액/복리 수익/배당 재투자 계산기, 홈 페이지, 공통 레이아웃, 기본 광고 슬롯까지 포함
 - 각 계산기 페이지에는 짧은 개념 설명 섹션을 포함
+- 별도 설명형 콘텐츠는 다음 단계에서 `/guides` 섹션으로 분리해 추가
 - 500~800자 수준의 SEO 확장 카피, 뉴스 페이지, 배당주 정보 페이지는 Should 단계에서 보강
 
 ### MVP 이후 확장 후보
@@ -47,6 +48,9 @@ app/
     averaging-down-target/page.tsx ← 추가 매수 필요 금액 계산기
     compound-return/page.tsx       ← 복리 수익 계산기
     dividend-reinvest/page.tsx     ← 배당 재투자 계산기
+  guides/
+    page.tsx                       ← 가이드 목록 허브
+    averaging-down/page.tsx        ← 첫 물타기 가이드
   info/                            ← Should 단계 확장
     news/page.tsx
   sitemap.ts                       ← 자동 사이트맵 생성
@@ -251,7 +255,7 @@ export const tools = [
 
 | 단계 | 추가 내용 |
 |------|-----------|
-| Should | 각 계산기 하단 개념 설명 섹션 보강, 최신 뉴스 페이지, 배당주 정보 페이지 |
+| Should | `/guides` 가이드 허브, `/guides/averaging-down` 첫 상세 가이드, 계산기-가이드 상호 링크, 최신 뉴스 페이지, 배당주 정보 페이지 |
 | Could | 배당 캘린더, 종목 재무 요약, 환율·금리 계산기 |
 | Won't (이번 버전) | 로그인, 포트폴리오 저장, 실시간 시세 API |
 

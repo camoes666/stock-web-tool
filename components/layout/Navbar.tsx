@@ -16,6 +16,9 @@ export default function Navbar() {
         </Link>
 
         <div className="flex flex-wrap gap-x-5 gap-y-2 text-sm text-slate-600">
+          <Link href="/guides" className="transition hover:text-brand-700">
+            가이드
+          </Link>
           {featuredTools.map((tool) => (
             <Link key={tool.slug} href={tool.href} className="transition hover:text-brand-700">
               {tool.shortName}
