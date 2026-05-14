@@ -75,7 +75,7 @@ export const tools: Tool[] = [
     icon: '🧮',
     href: '/calculators/fair-value',
     category: 'calculator',
-    featured: true,
+    featured: false,
     relatedSlugs: ['target-price', 'return-rate', 'dividend']
   },
   {
@@ -127,7 +127,7 @@ export const tools: Tool[] = [
     icon: '🌍',
     href: '/calculators/overseas-capital-gains',
     category: 'calculator',
-    featured: false,
+    featured: true,
     relatedSlugs: ['return-rate', 'multa', 'target-price']
   }
 ]

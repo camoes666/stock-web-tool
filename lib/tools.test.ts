@@ -7,8 +7,8 @@ describe('tool presentation metadata', () => {
       'return-rate',
       'dividend',
       'target-price',
-      'fair-value',
-      'compound-return'
+      'compound-return',
+      'overseas-capital-gains'
     ])
   })
 
@@ -17,9 +17,9 @@ describe('tool presentation metadata', () => {
 
     expect(secondaryTools.every((tool) => !featuredSlugs.has(tool.slug))).toBe(true)
     expect(secondaryTools.map((tool) => tool.slug)).toEqual([
+      'fair-value',
       'averaging-down-target',
-      'dividend-reinvest',
-      'overseas-capital-gains'
+      'dividend-reinvest'
     ])
   })
 
