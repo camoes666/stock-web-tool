@@ -1,14 +1,14 @@
 import type { Metadata } from 'next'
-import Link from 'next/link'
 import GuideCard from '@/components/guides/GuideCard'
 import ToolCard from '@/components/home/ToolCard'
+import AnalyticsLink from '@/components/analytics/AnalyticsLink'
 import AdSlot from '@/components/layout/AdSlot'
 import { guides } from '@/lib/guides'
 import { featuredTools, secondaryTools } from '@/lib/tools'
 
 export const metadata: Metadata = {
-  title: '주식 계산기 모음 - 로그인 없이 바로 사용하는 투자 도구',
-  description: '물타기, 배당, 수익률, 목표가 계산기를 로그인 없이 바로 사용할 수 있는 주식 계산기 허브입니다.'
+  title: '주식 계산기 모음 - 로그인 없이 바로 쓰는 투자 도구',
+  description: '물타기, 배당, 수익률, 목표가, 복리 계산기를 빠르게 사용할 수 있는 주식 계산기 허브입니다.'
 }
 
 export default function HomePage() {
@@ -20,16 +20,16 @@ export default function HomePage() {
         <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
           <div>
             <p className="text-xs font-semibold uppercase tracking-[0.18em] text-brand-700">Recently used</p>
-            <h1 className="mt-2 text-lg font-semibold tracking-tight text-slate-900">
-              자주 찾는 계산기로 바로 들어가세요
-            </h1>
+            <h1 className="mt-2 text-lg font-semibold tracking-tight text-slate-900">자주 찾는 계산기로 바로 들어가세요</h1>
           </div>
 
           <div className="grid gap-3 sm:grid-cols-2 lg:min-w-[540px] lg:grid-cols-3">
             {featuredTools.slice(0, 3).map((tool) => (
-              <Link
+              <AnalyticsLink
                 key={tool.slug}
                 href={tool.href}
+                ctaName={`tool-${tool.slug}`}
+                ctaLocation="home-recent"
                 className="rounded-2xl border border-slate-200 bg-slate-50/80 px-4 py-4 transition hover:border-brand-300 hover:bg-white"
               >
                 <div className="flex items-center justify-between gap-3">
@@ -37,7 +37,7 @@ export default function HomePage() {
                   <span className="text-brand-700">→</span>
                 </div>
                 <p className="mt-2 text-sm text-slate-500">{tool.shortName}</p>
-              </Link>
+              </AnalyticsLink>
             ))}
           </div>
         </div>
@@ -57,8 +57,7 @@ export default function HomePage() {
           </div>
 
           <div className="rounded-2xl border border-slate-200 bg-white/85 px-4 py-3 text-sm text-slate-600">
-            <span className="font-semibold text-slate-900">{featuredTools.length + secondaryTools.length}개</span>{' '}
-            계산기를 같은 패턴으로 계속 확장하고 있습니다.
+            <span className="font-semibold text-slate-900">{featuredTools.length + secondaryTools.length}개</span> 계산기를 같은 패턴으로 계속 확장하고 있습니다.
           </div>
         </div>
 
@@ -81,15 +80,17 @@ export default function HomePage() {
 
           <div className="mt-6 grid gap-4 sm:grid-cols-2">
             {secondaryTools.map((tool) => (
-              <Link
+              <AnalyticsLink
                 key={tool.slug}
                 href={tool.href}
+                ctaName={`tool-${tool.slug}`}
+                ctaLocation="home-secondary"
                 className="rounded-[1.5rem] border border-slate-200 bg-slate-50/70 p-5 transition hover:border-brand-300 hover:bg-white"
               >
                 <p className="text-sm font-semibold tracking-[0.14em] text-brand-700">{tool.purpose}</p>
                 <h4 className="mt-2 text-lg font-semibold text-slate-900">{tool.name}</h4>
                 <p className="mt-2 text-sm leading-6 text-slate-600">{tool.description}</p>
-              </Link>
+              </AnalyticsLink>
             ))}
           </div>
         </div>
@@ -99,9 +100,9 @@ export default function HomePage() {
             <p className="text-sm font-semibold uppercase tracking-[0.16em] text-slate-500">Guide</p>
             <div className="mt-2 flex items-center justify-between gap-4">
               <h3 className="text-2xl font-semibold tracking-tight text-slate-950">계산기를 더 잘 쓰는 설명 가이드</h3>
-              <Link href="/guides" className="text-sm font-semibold text-brand-700 transition hover:text-brand-800">
+              <AnalyticsLink href="/guides" ctaName="guide-index" ctaLocation="home-guides-link" className="text-sm font-semibold text-brand-700 transition hover:text-brand-800">
                 전체 가이드 보기
-              </Link>
+              </AnalyticsLink>
             </div>
             <p className="mt-4 text-sm leading-6 text-slate-600">
               계산 결과를 읽는 방법과 자주 쓰는 개념을 짧고 명확하게 정리했습니다.

@@ -1,6 +1,7 @@
 'use client'
 
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
+import { trackCalculatorRun, trackCalculatorView } from '@/lib/analytics'
 import { calcMulta, type MultaInput } from '@/lib/calculations'
 import {
   CalculatorActionButton,
@@ -24,6 +25,13 @@ export default function MultaCalculator() {
   const [addQty, setAddQty] = useState('')
   const [error, setError] = useState('')
   const [result, setResult] = useState<ReturnType<typeof calcMulta> | null>(null)
+
+  useEffect(() => {
+    trackCalculatorView({
+      calculator_name: 'multa',
+      calculator_category: 'stock'
+    })
+  }, [])
 
   function handleCalc() {
     const input: MultaInput = {
@@ -53,6 +61,11 @@ export default function MultaCalculator() {
 
     setError('')
     setResult(calcMulta(input))
+    trackCalculatorRun({
+      calculator_name: 'multa',
+      calculator_category: 'stock',
+      input_count: 4
+    })
   }
 
   const moneyExample = getCurrencyExample(currency)

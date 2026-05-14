@@ -1,6 +1,7 @@
 'use client'
 
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
+import { trackCalculatorRun, trackCalculatorView } from '@/lib/analytics'
 import { calcDividendReinvest, type DividendReinvestInput } from '@/lib/calculations'
 import {
   CalculatorActionButton,
@@ -24,6 +25,13 @@ export default function DividendReinvestCalculator() {
   const [years, setYears] = useState('')
   const [error, setError] = useState('')
   const [result, setResult] = useState<ReturnType<typeof calcDividendReinvest> | null>(null)
+
+  useEffect(() => {
+    trackCalculatorView({
+      calculator_name: 'dividend-reinvest',
+      calculator_category: 'stock'
+    })
+  }, [])
 
   function handleCalc() {
     const input: DividendReinvestInput = {
@@ -53,6 +61,11 @@ export default function DividendReinvestCalculator() {
 
     setError('')
     setResult(calcDividendReinvest(input))
+    trackCalculatorRun({
+      calculator_name: 'dividend-reinvest',
+      calculator_category: 'stock',
+      input_count: 4
+    })
   }
 
   const moneyExample = getCurrencyExample(currency)

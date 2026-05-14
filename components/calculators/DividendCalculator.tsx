@@ -1,6 +1,7 @@
 'use client'
 
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
+import { trackCalculatorRun, trackCalculatorView } from '@/lib/analytics'
 import { calcDividend, type DividendInput } from '@/lib/calculations'
 import {
   CalculatorActionButton,
@@ -23,6 +24,13 @@ export default function DividendCalculator() {
   const [qty, setQty] = useState('')
   const [error, setError] = useState('')
   const [result, setResult] = useState<ReturnType<typeof calcDividend> | null>(null)
+
+  useEffect(() => {
+    trackCalculatorView({
+      calculator_name: 'dividend',
+      calculator_category: 'stock'
+    })
+  }, [])
 
   function handleCalc() {
     const input: DividendInput = {
@@ -51,6 +59,11 @@ export default function DividendCalculator() {
 
     setError('')
     setResult(calcDividend(input))
+    trackCalculatorRun({
+      calculator_name: 'dividend',
+      calculator_category: 'stock',
+      input_count: 3
+    })
   }
 
   const moneyExample = getCurrencyExample(currency)

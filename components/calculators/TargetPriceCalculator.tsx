@@ -1,6 +1,7 @@
 'use client'
 
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
+import { trackCalculatorRun, trackCalculatorView } from '@/lib/analytics'
 import { calcTargetPrice, type TargetPriceInput } from '@/lib/calculations'
 import {
   CalculatorActionButton,
@@ -23,6 +24,13 @@ export default function TargetPriceCalculator() {
   const [lossPercent, setLossPercent] = useState('')
   const [error, setError] = useState('')
   const [result, setResult] = useState<ReturnType<typeof calcTargetPrice> | null>(null)
+
+  useEffect(() => {
+    trackCalculatorView({
+      calculator_name: 'target-price',
+      calculator_category: 'stock'
+    })
+  }, [])
 
   function handleCalc() {
     const input: TargetPriceInput = {
@@ -51,6 +59,11 @@ export default function TargetPriceCalculator() {
 
     setError('')
     setResult(calcTargetPrice(input))
+    trackCalculatorRun({
+      calculator_name: 'target-price',
+      calculator_category: 'stock',
+      input_count: 3
+    })
   }
 
   const moneyExample = getCurrencyExample(currency)

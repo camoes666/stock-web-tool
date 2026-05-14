@@ -1,10 +1,12 @@
-import Link from 'next/link'
+import AnalyticsLink from '@/components/analytics/AnalyticsLink'
 import type { Tool } from '@/lib/tools'
 
 export default function ToolCard({ tool }: { tool: Tool }) {
   return (
-    <Link
+    <AnalyticsLink
       href={tool.href}
+      ctaName={`tool-${tool.slug}`}
+      ctaLocation={tool.featured ? 'home-featured' : 'home-secondary'}
       className="group flex min-h-[220px] flex-col rounded-[1.75rem] border border-slate-200 bg-white/95 p-6 shadow-[0_18px_40px_rgba(15,23,42,0.06)] transition hover:-translate-y-1 hover:border-brand-300 hover:shadow-[0_24px_48px_rgba(15,23,42,0.10)]"
     >
       <div className="flex items-start justify-between gap-4">
@@ -25,6 +27,6 @@ export default function ToolCard({ tool }: { tool: Tool }) {
       <span className="mt-auto pt-8 text-sm font-semibold text-slate-900 transition group-hover:text-brand-700">
         계산기 열기 →
       </span>
-    </Link>
+    </AnalyticsLink>
   )
 }

@@ -1,27 +1,51 @@
-import { render, screen } from '@testing-library/react'
+import { fireEvent, render, screen } from '@testing-library/react'
 import ToolCard from '@/components/home/ToolCard'
 import type { Tool } from '@/lib/tools'
 
-describe('ToolCard', () => {
-  it('renders the purpose-first homepage presentation', () => {
-    const tool = {
-      slug: 'multa',
-      name: '물타기 계산기',
-      shortName: '물타기',
-      purpose: '추가 매수 판단',
-      description: '추가 매수 뒤 평단 변화를 바로 계산합니다.',
-      summary: '평단 낮추기 · 물타기 계산기',
-      icon: '◎',
-      href: '/calculators/multa',
-      category: 'calculator',
-      featured: true,
-      relatedSlugs: ['averaging-down-target', 'return-rate', 'target-price']
-    } satisfies Tool
+declare global {
+  interface Window {
+    dataLayer?: Array<Record<string, unknown>>
+  }
+}
 
+describe('ToolCard', () => {
+  const tool = {
+    slug: 'multa',
+    name: 'Multa calculator',
+    shortName: 'Multa',
+    purpose: 'Average down check',
+    description: 'Quickly calculate updated average price after an additional buy.',
+    summary: 'Average down calculator',
+    icon: 'M',
+    href: '/calculators/multa',
+    category: 'calculator',
+    featured: true,
+    relatedSlugs: ['averaging-down-target', 'return-rate', 'target-price']
+  } satisfies Tool
+
+  beforeEach(() => {
+    window.dataLayer = []
+  })
+
+  it('renders the purpose-first homepage presentation', () => {
     render(<ToolCard tool={tool} />)
 
-    expect(screen.getByText('추가 매수 판단')).toBeInTheDocument()
-    expect(screen.getByText('평단 낮추기 · 물타기 계산기')).toBeInTheDocument()
-    expect(screen.getByRole('link', { name: /추가 매수 판단/i })).toBeInTheDocument()
+    expect(screen.getByText('Average down check')).toBeInTheDocument()
+    expect(screen.getByText('Average down calculator')).toBeInTheDocument()
+    expect(screen.getByRole('link', { name: /average down check/i })).toBeInTheDocument()
+  })
+
+  it('tracks featured card clicks as CTA events', () => {
+    render(<ToolCard tool={tool} />)
+
+    fireEvent.click(screen.getByRole('link', { name: /average down check/i }))
+
+    expect(window.dataLayer).toEqual([
+      expect.objectContaining({
+        event: 'cta_click',
+        cta_name: 'tool-multa',
+        cta_location: 'home-featured'
+      })
+    ])
   })
 })

@@ -1,4 +1,4 @@
-import Link from 'next/link'
+import AnalyticsLink from '@/components/analytics/AnalyticsLink'
 import type { Guide } from '@/lib/guides'
 import AdSlot from '@/components/layout/AdSlot'
 import { getRelatedTools } from '@/lib/tools'
@@ -48,15 +48,17 @@ export default function CalculatorLayout({
 
               <div className="mt-6 grid gap-4 sm:grid-cols-2">
                 {relatedGuides.map((guide) => (
-                  <Link
+                  <AnalyticsLink
                     key={guide.slug}
                     href={guide.href}
+                    ctaName={`guide-${guide.slug}`}
+                    ctaLocation="calculator-related-guides"
                     className="rounded-[1.5rem] border border-slate-200 bg-slate-50/70 p-5 transition hover:border-brand-300 hover:bg-white"
                   >
                     <p className="text-sm font-semibold tracking-[0.14em] text-brand-700">Guide</p>
                     <h3 className="mt-2 text-lg font-semibold text-slate-900">{guide.title}</h3>
                     <p className="mt-2 text-sm leading-6 text-slate-600">{guide.description}</p>
-                  </Link>
+                  </AnalyticsLink>
                 ))}
               </div>
             </section>
@@ -72,15 +74,17 @@ export default function CalculatorLayout({
 
             <div className="mt-6 grid gap-4 sm:grid-cols-2">
               {relatedTools.map((tool) => (
-                <Link
+                <AnalyticsLink
                   key={tool.slug}
                   href={tool.href}
+                  ctaName={`tool-${tool.slug}`}
+                  ctaLocation="calculator-related-tools"
                   className="rounded-[1.5rem] border border-slate-200 bg-slate-50/70 p-5 transition hover:border-brand-300 hover:bg-white"
                 >
                   <p className="text-sm font-semibold tracking-[0.14em] text-brand-700">{tool.purpose}</p>
                   <h3 className="mt-2 text-lg font-semibold text-slate-900">{tool.name}</h3>
                   <p className="mt-2 text-sm leading-6 text-slate-600">{tool.description}</p>
-                </Link>
+                </AnalyticsLink>
               ))}
             </div>
           </section>

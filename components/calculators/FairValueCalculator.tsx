@@ -1,6 +1,7 @@
 'use client'
 
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
+import { trackCalculatorRun, trackCalculatorView } from '@/lib/analytics'
 import { calcFairValue, type FairValueInput } from '@/lib/calculations'
 import {
   CalculatorActionButton,
@@ -25,6 +26,13 @@ export default function FairValueCalculator() {
   const [error, setError] = useState('')
   const [result, setResult] = useState<ReturnType<typeof calcFairValue> | null>(null)
 
+  useEffect(() => {
+    trackCalculatorView({
+      calculator_name: 'fair-value',
+      calculator_category: 'stock'
+    })
+  }, [])
+
   function handleCalc() {
     const input: FairValueInput = {
       eps: Number(eps),
@@ -47,6 +55,11 @@ export default function FairValueCalculator() {
 
     setError('')
     setResult(calcFairValue(input))
+    trackCalculatorRun({
+      calculator_name: 'fair-value',
+      calculator_category: 'stock',
+      input_count: 3
+    })
   }
 
   const moneyExample = getCurrencyExample(currency)

@@ -1,6 +1,7 @@
 'use client'
 
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
+import { trackCalculatorRun, trackCalculatorView } from '@/lib/analytics'
 import { calcAveragingDownTarget, type AveragingDownTargetInput } from '@/lib/calculations'
 import {
   CalculatorActionButton,
@@ -24,6 +25,13 @@ export default function AveragingDownTargetCalculator() {
   const [targetAvgPrice, setTargetAvgPrice] = useState('')
   const [error, setError] = useState('')
   const [result, setResult] = useState<ReturnType<typeof calcAveragingDownTarget> | null>(null)
+
+  useEffect(() => {
+    trackCalculatorView({
+      calculator_name: 'averaging-down-target',
+      calculator_category: 'stock'
+    })
+  }, [])
 
   function handleCalc() {
     const input: AveragingDownTargetInput = {
@@ -65,6 +73,11 @@ export default function AveragingDownTargetCalculator() {
 
     setError('')
     setResult(calcAveragingDownTarget(input))
+    trackCalculatorRun({
+      calculator_name: 'averaging-down-target',
+      calculator_category: 'stock',
+      input_count: 5
+    })
   }
 
   const moneyExample = getCurrencyExample(currency)

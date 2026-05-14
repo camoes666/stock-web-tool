@@ -13,13 +13,14 @@ const notoSansKr = Noto_Sans_KR({
 
 const BASE_URL = getSiteUrl()
 const GA_MEASUREMENT_ID = process.env.NEXT_PUBLIC_GA_ID || 'G-JVF3BC2W1H'
+const GTM_ID = process.env.NEXT_PUBLIC_GTM_ID
 const HOME_META_DESCRIPTION =
-  '물타기·수익률·배당·목표가를 로그인 없이 계산하는 주식 계산기 허브'
+  '물타기, 배당, 수익률, 목표가를 빠르게 계산하는 주식 계산기 허브'
 
 export const metadata: Metadata = {
   metadataBase: new URL(BASE_URL),
   title: {
-    default: '주식 계산기 모음 - 로그인 없이 바로 사용하는 투자 도구',
+    default: '주식 계산기 모음',
     template: '%s | 주식 계산기'
   },
   description: HOME_META_DESCRIPTION,
@@ -30,20 +31,20 @@ export const metadata: Metadata = {
     type: 'website',
     url: '/',
     siteName: 'Stock Web Tools',
-    title: '주식 계산기 모음 - 로그인 없이 바로 사용하는 투자 도구',
+    title: '주식 계산기 모음',
     description: HOME_META_DESCRIPTION,
     images: [
       {
         url: '/opengraph-image',
         width: 1200,
         height: 630,
-        alt: 'Stock Web Tools 공유 이미지'
+        alt: '주식 계산기 공유 이미지'
       }
     ]
   },
   twitter: {
     card: 'summary_large_image',
-    title: '주식 계산기 모음 - 로그인 없이 바로 사용하는 투자 도구',
+    title: '주식 계산기 모음',
     description: HOME_META_DESCRIPTION,
     images: ['/opengraph-image']
   }
@@ -57,27 +58,41 @@ export default function RootLayout({
   return (
     <html lang="ko">
       <head>
-        <meta
-          name="naver-site-verification"
-          content="103859e91915ff64b87f9496cb9fe2188d86d8d8"
-        />
+        <meta name="naver-site-verification" content="103859e91915ff64b87f9496cb9fe2188d86d8d8" />
         <Script
           src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6731103569114139"
           crossOrigin="anonymous"
           strategy="afterInteractive"
         />
-        <Script
-          src={`https://www.googletagmanager.com/gtag/js?id=${GA_MEASUREMENT_ID}`}
-          strategy="afterInteractive"
-        />
-        <Script id="google-analytics" strategy="afterInteractive">
-          {`
-            window.dataLayer = window.dataLayer || [];
-            function gtag(){dataLayer.push(arguments);}
-            gtag('js', new Date());
-            gtag('config', '${GA_MEASUREMENT_ID}');
-          `}
+        <Script id="analytics-datalayer" strategy="beforeInteractive">
+          {`window.dataLayer = window.dataLayer || [];`}
         </Script>
+        {GTM_ID ? (
+          <>
+            <Script src={`https://www.googletagmanager.com/gtm.js?id=${GTM_ID}`} strategy="afterInteractive" />
+            <Script id="google-tag-manager" strategy="afterInteractive">
+              {`
+                window.dataLayer = window.dataLayer || [];
+                window.dataLayer.push({
+                  'gtm.start': new Date().getTime(),
+                  event: 'gtm.js'
+                });
+              `}
+            </Script>
+          </>
+        ) : (
+          <>
+            <Script src={`https://www.googletagmanager.com/gtag/js?id=${GA_MEASUREMENT_ID}`} strategy="afterInteractive" />
+            <Script id="google-analytics" strategy="afterInteractive">
+              {`
+                window.dataLayer = window.dataLayer || [];
+                function gtag(){dataLayer.push(arguments);}
+                gtag('js', new Date());
+                gtag('config', '${GA_MEASUREMENT_ID}');
+              `}
+            </Script>
+          </>
+        )}
       </head>
       <body className={`${notoSansKr.className} flex min-h-screen flex-col`}>
         <Navbar />

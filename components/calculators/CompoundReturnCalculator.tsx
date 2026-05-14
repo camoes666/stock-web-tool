@@ -1,6 +1,7 @@
 'use client'
 
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
+import { trackCalculatorRun, trackCalculatorView } from '@/lib/analytics'
 import { calcCompoundReturn, type CompoundReturnInput } from '@/lib/calculations'
 import {
   CalculatorActionButton,
@@ -25,6 +26,13 @@ export default function CompoundReturnCalculator() {
   const [error, setError] = useState('')
   const [result, setResult] = useState<ReturnType<typeof calcCompoundReturn> | null>(null)
 
+  useEffect(() => {
+    trackCalculatorView({
+      calculator_name: 'compound-return',
+      calculator_category: 'stock'
+    })
+  }, [])
+
   function handleCalc() {
     const input: CompoundReturnInput = {
       principal: Number(principal),
@@ -47,6 +55,11 @@ export default function CompoundReturnCalculator() {
 
     setError('')
     setResult(calcCompoundReturn(input))
+    trackCalculatorRun({
+      calculator_name: 'compound-return',
+      calculator_category: 'stock',
+      input_count: 4
+    })
   }
 
   const moneyExample = getCurrencyExample(currency)

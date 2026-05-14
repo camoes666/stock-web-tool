@@ -1,6 +1,7 @@
 'use client'
 
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
+import { trackCalculatorRun, trackCalculatorView } from '@/lib/analytics'
 import { calcReturnRate, type ReturnRateInput } from '@/lib/calculations'
 import {
   CalculatorActionButton,
@@ -23,6 +24,13 @@ export default function ReturnRateCalculator() {
   const [qty, setQty] = useState('')
   const [error, setError] = useState('')
   const [result, setResult] = useState<ReturnType<typeof calcReturnRate> | null>(null)
+
+  useEffect(() => {
+    trackCalculatorView({
+      calculator_name: 'return-rate',
+      calculator_category: 'stock'
+    })
+  }, [])
 
   function handleCalc() {
     const input: ReturnRateInput = {
@@ -51,6 +59,11 @@ export default function ReturnRateCalculator() {
 
     setError('')
     setResult(calcReturnRate(input))
+    trackCalculatorRun({
+      calculator_name: 'return-rate',
+      calculator_category: 'stock',
+      input_count: 3
+    })
   }
 
   const moneyExample = getCurrencyExample(currency)
