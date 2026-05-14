@@ -18,8 +18,17 @@ describe('tool presentation metadata', () => {
     expect(secondaryTools.every((tool) => !featuredSlugs.has(tool.slug))).toBe(true)
     expect(secondaryTools.map((tool) => tool.slug)).toEqual([
       'averaging-down-target',
-      'dividend-reinvest'
+      'dividend-reinvest',
+      'overseas-capital-gains'
     ])
+  })
+
+  it('includes the overseas capital-gains calculator in the registry', () => {
+    expect(findToolBySlug('overseas-capital-gains')).toMatchObject({
+      slug: 'overseas-capital-gains',
+      href: '/calculators/overseas-capital-gains',
+      category: 'calculator'
+    })
   })
 
   it('returns related tools without including the current calculator', () => {

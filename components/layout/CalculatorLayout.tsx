@@ -42,7 +42,7 @@ export default function CalculatorLayout({
               <div className="flex items-center justify-between gap-4">
                 <div>
                   <p className="text-xs font-semibold uppercase tracking-[0.18em] text-slate-500">Related guides</p>
-                  <h2 className="mt-2 text-2xl font-semibold tracking-tight text-slate-950">관련 가이드</h2>
+                  <h2 className="mt-2 text-2xl font-semibold tracking-tight text-slate-950">함께 읽으면 좋은 가이드</h2>
                 </div>
               </div>
 

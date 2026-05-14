@@ -39,7 +39,9 @@ describe('analytics helpers', () => {
     trackCalculatorRun({
       calculator_name: 'multa',
       calculator_category: 'stock',
-      input_count: 4
+      input_count: 4,
+      fee_enabled: true,
+      tax_enabled: true
     })
 
     expect(window.dataLayer).toEqual([
@@ -47,7 +49,9 @@ describe('analytics helpers', () => {
         event: 'calculator_run',
         calculator_name: 'multa',
         calculator_category: 'stock',
-        input_count: 4
+        input_count: 4,
+        fee_enabled: true,
+        tax_enabled: true
       })
     ])
   })

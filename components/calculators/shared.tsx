@@ -1,26 +1,32 @@
 'use client'
 
-import { useEffect, useState, type ReactNode } from 'react'
+import { useEffect, useId, useState, type ReactNode } from 'react'
 
 export type CurrencyCode = 'KRW' | 'USD'
+
+export interface TradingCostFieldValues {
+  brokerFeePercent: string
+  transactionTaxPercent: string
+  extraCost: string
+}
 
 const currencyMeta: Record<
   CurrencyCode,
   { label: string; locale: string; currency: string; minimumFractionDigits: number; example: string }
 > = {
   KRW: {
-    label: '원',
+    label: '원화',
     locale: 'ko-KR',
     currency: 'KRW',
     minimumFractionDigits: 0,
-    example: '예: 10,000,000원'
+    example: '₩10,000,000'
   },
   USD: {
     label: '달러',
     locale: 'en-US',
     currency: 'USD',
     minimumFractionDigits: 2,
-    example: 'Example: $10,000.00'
+    example: '$10,000.00'
   }
 }
 
@@ -84,7 +90,7 @@ export function CurrencySelector({
                 : 'text-slate-700 hover:bg-white/70 hover:text-slate-950'
             }`}
           >
-            {code === 'KRW' ? '원 KRW' : '달러 USD'}
+            {code === 'KRW' ? '원화 KRW' : '달러 USD'}
           </button>
         )
       })}
@@ -128,11 +134,14 @@ export function CalculatorField({
   step?: string
   helpText?: string
 }) {
+  const inputId = useId()
+
   return (
-    <label className="block">
+    <label htmlFor={inputId} className="block">
       <span className="mb-2 block text-sm font-medium text-slate-800">{label}</span>
       {helpText ? <span className="mb-3 block text-xs leading-5 text-slate-500">{helpText}</span> : null}
       <input
+        id={inputId}
         type="number"
         inputMode="decimal"
         step={step}
@@ -142,6 +151,45 @@ export function CalculatorField({
         className="w-full rounded-2xl border border-slate-300 bg-slate-50/70 px-4 py-3 text-sm text-slate-900 outline-none transition focus:border-brand-500 focus:bg-white focus:ring-4 focus:ring-brand-100"
       />
     </label>
+  )
+}
+
+export function TradingCostFields({
+  brokerFeePercent,
+  transactionTaxPercent,
+  extraCost,
+  onBrokerFeePercentChange,
+  onTransactionTaxPercentChange,
+  onExtraCostChange
+}: TradingCostFieldValues & {
+  onBrokerFeePercentChange: (value: string) => void
+  onTransactionTaxPercentChange: (value: string) => void
+  onExtraCostChange: (value: string) => void
+}) {
+  return (
+    <div className="grid gap-4 sm:grid-cols-3">
+      <CalculatorField
+        label="증권사 수수료 (%)"
+        value={brokerFeePercent}
+        onChange={onBrokerFeePercentChange}
+        placeholder="0.015"
+        helpText="기본값 0.015%, 필요하면 직접 수정하세요."
+      />
+      <CalculatorField
+        label="거래세 (%)"
+        value={transactionTaxPercent}
+        onChange={onTransactionTaxPercentChange}
+        placeholder="0.20"
+        helpText="매도 시 반영할 거래세 비율입니다."
+      />
+      <CalculatorField
+        label="기타 비용"
+        value={extraCost}
+        onChange={onExtraCostChange}
+        placeholder="0"
+        helpText="환전 비용이나 별도 고정 비용을 입력하세요."
+      />
+    </div>
   )
 }
 
@@ -164,9 +212,7 @@ export function CalculatorActionButton({
 }
 
 export function CalculatorError({ children }: { children: ReactNode }) {
-  return (
-    <div className="rounded-2xl border border-rose-200 bg-rose-50 px-4 py-3 text-sm text-rose-700">{children}</div>
-  )
+  return <div className="rounded-2xl border border-rose-200 bg-rose-50 px-4 py-3 text-sm text-rose-700">{children}</div>
 }
 
 export function ResultCard({

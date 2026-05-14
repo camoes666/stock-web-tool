@@ -5,6 +5,8 @@ export type DataLayerEvent = {
   calculator_name?: string
   calculator_category?: string
   input_count?: number
+  fee_enabled?: boolean
+  tax_enabled?: boolean
   cta_name?: string
   cta_location?: string
   copy_type?: string
@@ -49,7 +51,7 @@ export function trackCalculatorView(event: Pick<DataLayerEvent, 'calculator_name
 }
 
 export function trackCalculatorRun(
-  event: Pick<DataLayerEvent, 'calculator_name' | 'calculator_category'> & Pick<DataLayerEvent, 'input_count'>
+  event: Pick<DataLayerEvent, 'calculator_name' | 'calculator_category' | 'input_count' | 'fee_enabled' | 'tax_enabled'>
 ) {
   pushEvent({
     event: 'calculator_run',

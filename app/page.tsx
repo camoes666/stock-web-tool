@@ -8,7 +8,8 @@ import { featuredTools, secondaryTools } from '@/lib/tools'
 
 export const metadata: Metadata = {
   title: '주식 계산기 모음 - 로그인 없이 바로 쓰는 투자 도구',
-  description: '물타기, 배당, 수익률, 목표가, 복리 계산기를 빠르게 사용할 수 있는 주식 계산기 허브입니다.'
+  description:
+    '물타기, 수익률, 배당, 목표가, 복리, 해외주식 양도세까지 빠르게 확인할 수 있는 주식 계산기 허브입니다.'
 }
 
 export default function HomePage() {
@@ -20,7 +21,9 @@ export default function HomePage() {
         <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
           <div>
             <p className="text-xs font-semibold uppercase tracking-[0.18em] text-brand-700">Recently used</p>
-            <h1 className="mt-2 text-lg font-semibold tracking-tight text-slate-900">자주 찾는 계산기로 바로 들어가세요</h1>
+            <h1 className="mt-2 text-lg font-semibold tracking-tight text-slate-900">
+              자주 찾는 계산기로 바로 들어가 보세요
+            </h1>
           </div>
 
           <div className="grid gap-3 sm:grid-cols-2 lg:min-w-[540px] lg:grid-cols-3">
@@ -51,13 +54,14 @@ export default function HomePage() {
               지금 필요한 판단부터 빠르게 보는 주식 계산기 허브
             </h2>
             <p className="mt-4 text-base leading-7 text-slate-600">
-              계산기 이름보다 먼저 어떤 판단에 맞는지 보이도록 구성했습니다. 추가 매수, 수익 점검, 배당 흐름처럼
-              바로 이해되는 이름으로 필요한 도구를 빠르게 찾을 수 있습니다.
+              계산기 이름보다 먼저 어떤 판단에 필요한지 보이도록 구성했습니다. 추가 매수, 수익 상태, 배당 흐름처럼
+              바로 이해되는 목적 중심으로 필요한 도구를 빠르게 찾을 수 있습니다.
             </p>
           </div>
 
           <div className="rounded-2xl border border-slate-200 bg-white/85 px-4 py-3 text-sm text-slate-600">
-            <span className="font-semibold text-slate-900">{featuredTools.length + secondaryTools.length}개</span> 계산기를 같은 패턴으로 계속 확장하고 있습니다.
+            <span className="font-semibold text-slate-900">{featuredTools.length + secondaryTools.length}개</span> 계산기를
+            같은 흐름으로 계속 확장하고 있습니다.
           </div>
         </div>
 
@@ -99,13 +103,18 @@ export default function HomePage() {
           <div className="rounded-[2rem] border border-slate-200 bg-white/92 p-6 shadow-[0_18px_50px_rgba(15,23,42,0.05)]">
             <p className="text-sm font-semibold uppercase tracking-[0.16em] text-slate-500">Guide</p>
             <div className="mt-2 flex items-center justify-between gap-4">
-              <h3 className="text-2xl font-semibold tracking-tight text-slate-950">계산기를 더 잘 쓰는 설명 가이드</h3>
-              <AnalyticsLink href="/guides" ctaName="guide-index" ctaLocation="home-guides-link" className="text-sm font-semibold text-brand-700 transition hover:text-brand-800">
+              <h3 className="text-2xl font-semibold tracking-tight text-slate-950">계산기를 더 쉽게 이해하는 설명 가이드</h3>
+              <AnalyticsLink
+                href="/guides"
+                ctaName="guide-index"
+                ctaLocation="home-guides-link"
+                className="text-sm font-semibold text-brand-700 transition hover:text-brand-800"
+              >
                 전체 가이드 보기
               </AnalyticsLink>
             </div>
             <p className="mt-4 text-sm leading-6 text-slate-600">
-              계산 결과를 읽는 방법과 자주 쓰는 개념을 짧고 명확하게 정리했습니다.
+              계산 결과를 읽는 방법과 자주 헷갈리는 개념을 짧고 명확하게 정리했습니다.
             </p>
             {featuredGuide ? (
               <div className="mt-5">

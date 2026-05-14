@@ -5,9 +5,82 @@ import {
   calcDividendReinvest,
   calcFairValue,
   calcMulta,
+  calcOverseasCapitalGains,
   calcReturnRate,
   calcTargetPrice
 } from '@/lib/calculations'
+
+describe('fee and tax helpers', () => {
+  it('calculates overseas capital gains tax with editable defaults', () => {
+    const result = calcOverseasCapitalGains({
+      buyAmount: 10000,
+      sellAmount: 15000,
+      buyFxRate: 1350,
+      sellFxRate: 1380,
+      deductibleExpenses: 50000,
+      basicDeduction: 2500000,
+      taxRatePercent: 22
+    })
+
+    expect(result.krwBuyAmount).toBe(13500000)
+    expect(result.krwSellAmount).toBe(20700000)
+    expect(result.capitalGain).toBe(7150000)
+    expect(result.taxableBase).toBe(4650000)
+    expect(result.estimatedTax).toBeCloseTo(1023000, 2)
+    expect(result.afterTaxGain).toBeCloseTo(6127000, 2)
+  })
+
+  it('calculates real profit after fees and taxes for return-rate flows', () => {
+    const result = calcReturnRate({
+      buyPrice: 50000,
+      currentPrice: 55000,
+      qty: 20,
+      brokerFeePercent: 0.015,
+      transactionTaxPercent: 0.2,
+      extraCost: 3000
+    })
+
+    expect(result.evaluationAmount).toBe(1100000)
+    expect(result.profitLoss).toBe(100000)
+    expect(result.totalCost).toBeCloseTo(5515, 2)
+    expect(result.realProfitLoss).toBeCloseTo(94485, 2)
+    expect(result.realReturnPercent).toBeCloseTo(9.4485, 4)
+    expect(result.breakEvenPrice).toBeCloseTo(50265.57, 2)
+  })
+
+  it('adds fee-aware investment totals for averaging-down flows', () => {
+    const result = calcMulta({
+      avgPrice: 50000,
+      qty: 100,
+      addPrice: 40000,
+      addQty: 50,
+      brokerFeePercent: 0.015,
+      transactionTaxPercent: 0.2,
+      extraCost: 10000
+    })
+
+    expect(result.totalInvestment).toBe(7000000)
+    expect(result.realTotalInvestment).toBeCloseTo(7011050, 2)
+    expect(result.effectiveAvgPrice).toBeCloseTo(46740.33, 2)
+    expect(result.breakEven).toBeCloseTo(46841.04, 2)
+  })
+
+  it('adds fee-aware cash requirements for target-average flows', () => {
+    const result = calcAveragingDownTarget({
+      avgPrice: 50000,
+      qty: 100,
+      currentPrice: 40000,
+      targetAvgPrice: 45000,
+      brokerFeePercent: 0.015,
+      extraCost: 5000
+    })
+
+    expect(result.requiredQty).toBe(100)
+    expect(result.requiredInvestment).toBe(4000000)
+    expect(result.realRequiredInvestment).toBeCloseTo(4005600, 2)
+    expect(result.realEstimatedAvgPrice).toBeCloseTo(45028, 2)
+  })
+})
 
 describe('calcMulta', () => {
   it('새 평단가를 계산한다', () => {
