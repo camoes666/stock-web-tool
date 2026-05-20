@@ -15,7 +15,7 @@ const BASE_URL = getSiteUrl()
 const GA_MEASUREMENT_ID = process.env.NEXT_PUBLIC_GA_ID || 'G-JVF3BC2W1H'
 const GTM_ID = process.env.NEXT_PUBLIC_GTM_ID
 const HOME_META_DESCRIPTION =
-  '물타기, 배당, 수익률, 목표가를 빠르게 계산하는 주식 계산기 허브'
+  '수수료, 거래세, 환율, 해외주식 양도세까지 반영해 실제로 남는 돈을 계산하는 주식 계산기 허브'
 
 export const metadata: Metadata = {
   metadataBase: new URL(BASE_URL),
@@ -31,7 +31,7 @@ export const metadata: Metadata = {
     type: 'website',
     url: '/',
     siteName: 'Stock Web Tools',
-    title: '주식 계산기 모음',
+    title: '실손익까지 보는 주식 계산기 모음',
     description: HOME_META_DESCRIPTION,
     images: [
       {
@@ -44,7 +44,7 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: 'summary_large_image',
-    title: '주식 계산기 모음',
+    title: '실손익까지 보는 주식 계산기 모음',
     description: HOME_META_DESCRIPTION,
     images: ['/opengraph-image']
   }

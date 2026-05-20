@@ -53,12 +53,12 @@ export default function OpenGraphImage() {
                 display: 'flex',
                 fontSize: '68px',
                 fontWeight: 800,
-                letterSpacing: '-0.04em',
+                letterSpacing: '0',
                 lineHeight: 1.05,
                 maxWidth: '780px'
               }}
             >
-              로그인 없이 바로 쓰는 주식 계산기 허브
+              수익률 말고 실제로 남는 돈을 계산하세요
             </div>
             <div
               style={{
@@ -69,12 +69,12 @@ export default function OpenGraphImage() {
                 maxWidth: '840px'
               }}
             >
-              물타기 · 수익률 · 배당 · 목표가 · 적정가 계산기를 한곳에서 빠르게 확인하세요.
+              수수료 · 세금 · 환율까지 반영하는 실손익 중심 주식 계산기 허브
             </div>
           </div>
 
           <div style={{ display: 'flex', gap: '18px', flexWrap: 'wrap' }}>
-            {['Averaging Down', 'Return Rate', 'Dividend', 'Target Price'].map((label) => (
+            {['Real PnL', 'US Stock Tax', 'Averaging Down', 'Return Rate'].map((label) => (
               <div
                 key={label}
                 style={{

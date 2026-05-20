@@ -19,8 +19,8 @@ export const guides: Guide[] = [
   {
     slug: 'overseas-capital-gains-tax',
     title: '해외주식 양도세 계산법',
-    description: '환율, 필요경비, 기본공제를 반영해 해외주식 세금을 어떻게 계산하는지 정리한 가이드입니다.',
-    excerpt: '무엇을 준비해야 하는지, 환율은 어떻게 넣는지, 계산기가 어디까지 다루는지 빠르게 확인할 수 있습니다.',
+    description: '미국주식 등 해외주식 세금을 환율, 필요경비, 기본공제, 세후 차익 기준으로 정리한 가이드입니다.',
+    excerpt: '매수·매도 환율을 어떻게 넣는지, 예상 양도세와 세후 차익을 어떻게 읽는지 빠르게 확인할 수 있습니다.',
     href: '/guides/overseas-capital-gains-tax',
     relatedToolSlugs: ['overseas-capital-gains']
   }

@@ -7,9 +7,9 @@ import { guides } from '@/lib/guides'
 import { featuredTools, secondaryTools } from '@/lib/tools'
 
 export const metadata: Metadata = {
-  title: '주식 계산기 모음 - 로그인 없이 바로 쓰는 투자 도구',
+  title: '주식 계산기 모음 - 수수료와 세금까지 보는 실손익 계산기',
   description:
-    '물타기, 수익률, 배당, 목표가, 복리, 해외주식 양도세까지 빠르게 확인할 수 있는 주식 계산기 허브입니다.'
+    '물타기, 수익률, 해외주식 양도세, 배당, 목표가까지 수수료와 세금을 고려해 실제로 남는 돈을 확인하는 주식 계산기 허브입니다.'
 }
 
 export default function HomePage() {
@@ -51,17 +51,17 @@ export default function HomePage() {
           <div className="max-w-2xl">
             <p className="text-sm font-semibold uppercase tracking-[0.18em] text-brand-700">Stock tools</p>
             <h2 className="mt-3 text-3xl font-semibold tracking-tight text-slate-950 sm:text-4xl">
-              지금 필요한 판단부터 빠르게 보는 주식 계산기 허브
+              수익률 말고, 실제로 남는 돈을 계산하세요
             </h2>
             <p className="mt-4 text-base leading-7 text-slate-600">
-              계산기 이름보다 먼저 어떤 판단에 필요한지 보이도록 구성했습니다. 추가 매수, 수익 상태, 배당 흐름처럼
-              바로 이해되는 목적 중심으로 필요한 도구를 빠르게 찾을 수 있습니다.
+              수수료, 거래세, 환율, 해외주식 양도세처럼 체감 수익을 바꾸는 비용을 함께 봅니다. 추가 매수,
+              수익률, 배당 흐름부터 세후 차익까지 실제 판단에 필요한 숫자를 빠르게 확인하세요.
             </p>
           </div>
 
           <div className="rounded-2xl border border-slate-200 bg-white/85 px-4 py-3 text-sm text-slate-600">
             <span className="font-semibold text-slate-900">{featuredTools.length + secondaryTools.length}개</span> 계산기를
-            같은 흐름으로 계속 확장하고 있습니다.
+            실손익 관점으로 계속 다듬고 있습니다.
           </div>
         </div>
 
@@ -77,9 +77,9 @@ export default function HomePage() {
           <div className="flex items-center justify-between gap-4">
             <div>
               <p className="text-sm font-semibold uppercase tracking-[0.16em] text-slate-500">All tools</p>
-              <h3 className="mt-2 text-2xl font-semibold tracking-tight text-slate-950">계속 늘어나는 계산기 목록</h3>
+              <h3 className="mt-2 text-2xl font-semibold tracking-tight text-slate-950">실전 판단에 맞춘 계산기 목록</h3>
             </div>
-            <span className="rounded-full bg-brand-50 px-3 py-1 text-sm font-medium text-brand-700">같은 카드 구조로 확장</span>
+            <span className="rounded-full bg-brand-50 px-3 py-1 text-sm font-medium text-brand-700">비용 반영 흐름 강화</span>
           </div>
 
           <div className="mt-6 grid gap-4 sm:grid-cols-2">
@@ -103,7 +103,7 @@ export default function HomePage() {
           <div className="rounded-[2rem] border border-slate-200 bg-white/92 p-6 shadow-[0_18px_50px_rgba(15,23,42,0.05)]">
             <p className="text-sm font-semibold uppercase tracking-[0.16em] text-slate-500">Guide</p>
             <div className="mt-2 flex items-center justify-between gap-4">
-              <h3 className="text-2xl font-semibold tracking-tight text-slate-950">계산기를 더 쉽게 이해하는 설명 가이드</h3>
+              <h3 className="text-2xl font-semibold tracking-tight text-slate-950">세금과 비용까지 이해하는 설명 가이드</h3>
               <AnalyticsLink
                 href="/guides"
                 ctaName="guide-index"
@@ -114,7 +114,7 @@ export default function HomePage() {
               </AnalyticsLink>
             </div>
             <p className="mt-4 text-sm leading-6 text-slate-600">
-              계산 결과를 읽는 방법과 자주 헷갈리는 개념을 짧고 명확하게 정리했습니다.
+              수익률과 실손익이 달라지는 이유, 해외주식 세금처럼 자주 헷갈리는 개념을 짧고 명확하게 정리했습니다.
             </p>
             {featuredGuide ? (
               <div className="mt-5">
