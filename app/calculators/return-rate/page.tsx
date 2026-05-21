@@ -2,6 +2,7 @@ import type { Metadata } from 'next'
 import ReturnRateCalculator from '@/components/calculators/ReturnRateCalculator'
 import JsonLd from '@/components/JsonLd'
 import CalculatorLayout from '@/components/layout/CalculatorLayout'
+import { getGuidesForTool } from '@/lib/guides'
 
 export const metadata: Metadata = {
   title: '수익률 계산기 - 평가손익과 실손익 계산',
@@ -18,6 +19,10 @@ const explainer = (
     <h2 className="text-lg font-semibold text-slate-900">어떻게 계산하나요?</h2>
     <p>
       현재가와 수량으로 평가금액을 계산한 뒤, 매수가 기준 손익과 수익률을 구합니다. 여기에 수수료, 거래세, 기타 비용을 더해 실손익과 실수익률도 함께 보여줍니다.
+    </p>
+    <h2 className="text-lg font-semibold text-slate-900">입력할 때 무엇을 주의하면 좋을까요?</h2>
+    <p>
+      매수·매도 수수료와 거래세는 가능한 한 실제 거래 조건에 가깝게 넣는 편이 좋습니다. 특히 짧게 자주 매매하는 경우에는 작은 비용 차이도 결과에 크게 반영될 수 있습니다.
     </p>
     <h2 className="text-lg font-semibold text-slate-900">어디에 활용하나요?</h2>
     <p>
@@ -39,6 +44,7 @@ export default function ReturnRatePage() {
         description="매수가와 현재가를 기준으로 평가손익과 수익률, 비용 반영 실손익까지 빠르게 계산합니다."
         currentSlug="return-rate"
         explainerContent={explainer}
+        relatedGuides={getGuidesForTool('return-rate')}
       >
         <ReturnRateCalculator />
       </CalculatorLayout>

@@ -1,7 +1,9 @@
 import Link from 'next/link'
 
 const footerLinks = [
+  { href: '/guides', label: '가이드' },
   { href: '/about', label: '소개' },
+  { href: '/terms', label: '이용안내' },
   { href: '/contact', label: '문의' },
   { href: '/privacy', label: '개인정보처리방침' }
 ]

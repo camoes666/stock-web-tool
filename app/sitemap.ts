@@ -4,7 +4,7 @@ import { getSiteUrl } from '@/lib/site'
 import { tools } from '@/lib/tools'
 
 const BASE_URL = getSiteUrl()
-const staticPages = ['/about', '/contact', '/privacy', '/guides'] as const
+const staticPages = ['/about', '/contact', '/privacy', '/terms', '/guides'] as const
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const staticEntries = staticPages.map((path) => ({

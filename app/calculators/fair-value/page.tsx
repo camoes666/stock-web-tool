@@ -2,6 +2,7 @@ import type { Metadata } from 'next'
 import FairValueCalculator from '@/components/calculators/FairValueCalculator'
 import JsonLd from '@/components/JsonLd'
 import CalculatorLayout from '@/components/layout/CalculatorLayout'
+import { getGuidesForTool } from '@/lib/guides'
 
 export const metadata: Metadata = {
   title: '적정가 계산기 - PER PBR 기반 적정가 추정',
@@ -15,6 +16,8 @@ const explainer = (
     <p>적정가 계산기는 밸류에이션 관점에서 현재 가격이 어느 수준인지 대략적으로 가늠할 때 유용합니다.</p>
     <h2 className="text-lg font-semibold text-slate-900">계산식</h2>
     <p>PER 기준 적정가는 EPS에 목표 PER을 곱해 계산하고, PBR 기준 적정가는 BPS에 목표 PBR을 곱해 계산합니다.</p>
+    <h2 className="text-lg font-semibold text-slate-900">왜 여러 가정을 같이 봐야 하나요?</h2>
+    <p>업종 평균과 시장 환경에 따라 적정하다고 보는 배수는 달라질 수 있습니다. 그래서 결과는 정답보다 비교 기준으로 해석하는 편이 좋습니다.</p>
     <h2 className="text-lg font-semibold text-slate-900">주의사항</h2>
     <p>목표 배수는 시장 환경과 업종 평균에 따라 크게 달라질 수 있으므로 단일 기준으로만 판단하지 않는 것이 좋습니다.</p>
   </div>
@@ -29,6 +32,7 @@ export default function FairValuePage() {
         description="EPS와 BPS를 바탕으로 종목의 적정가 범위를 간단하게 추정합니다."
         currentSlug="fair-value"
         explainerContent={explainer}
+        relatedGuides={getGuidesForTool('fair-value')}
       >
         <FairValueCalculator />
       </CalculatorLayout>

@@ -14,6 +14,7 @@ export const metadata: Metadata = {
 
 export default function HomePage() {
   const featuredGuide = guides[0]
+  const featuredGuideCards = guides.slice(0, 3)
 
   return (
     <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
@@ -56,6 +57,11 @@ export default function HomePage() {
             <p className="mt-4 text-base leading-7 text-slate-600">
               수수료, 거래세, 환율, 해외주식 양도세처럼 체감 수익을 바꾸는 비용을 함께 봅니다. 추가 매수,
               수익률, 배당 흐름부터 세후 차익까지 실제 판단에 필요한 숫자를 빠르게 확인하세요.
+            </p>
+            <p className="mt-4 text-base leading-7 text-slate-600">
+              계산기만 나열하는 데서 멈추지 않고, 각 숫자가 왜 중요한지 이해할 수 있도록 설명형 가이드도
+              함께 운영합니다. 초보자 검색 의도와 실전 계산 수요를 모두 고려해 정보형 콘텐츠를 계속
+              보강하고 있습니다.
             </p>
           </div>
 
@@ -116,10 +122,15 @@ export default function HomePage() {
             <p className="mt-4 text-sm leading-6 text-slate-600">
               수익률과 실손익이 달라지는 이유, 해외주식 세금처럼 자주 헷갈리는 개념을 짧고 명확하게 정리했습니다.
             </p>
+            <div className="mt-5 grid gap-4">
+              {featuredGuideCards.map((guide) => (
+                <GuideCard key={guide.slug} guide={guide} />
+              ))}
+            </div>
             {featuredGuide ? (
-              <div className="mt-5">
-                <GuideCard guide={featuredGuide} />
-              </div>
+              <p className="mt-4 text-sm leading-6 text-slate-500">
+                가장 많이 찾는 계산기와 연결되는 설명 글부터 우선 정리하고 있습니다.
+              </p>
             ) : null}
           </div>
 

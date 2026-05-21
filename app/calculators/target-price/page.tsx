@@ -2,6 +2,7 @@ import type { Metadata } from 'next'
 import TargetPriceCalculator from '@/components/calculators/TargetPriceCalculator'
 import JsonLd from '@/components/JsonLd'
 import CalculatorLayout from '@/components/layout/CalculatorLayout'
+import { getGuidesForTool } from '@/lib/guides'
 
 export const metadata: Metadata = {
   title: '목표가 계산기 - 목표 수익률과 손절가 계산',
@@ -15,6 +16,8 @@ const explainer = (
     <p>목표가와 손절가를 함께 잡아두면 매수 이후의 대응 기준을 더 분명하게 세울 수 있습니다.</p>
     <h2 className="text-lg font-semibold text-slate-900">계산식</h2>
     <p>목표가는 진입가에 목표 수익률을 더해 계산하고, 손절가는 진입가에서 손실 비율만큼 차감해 계산합니다.</p>
+    <h2 className="text-lg font-semibold text-slate-900">어떻게 해석하면 좋을까요?</h2>
+    <p>기대수익만 보기보다 손절 기준까지 함께 놓고 보면 같은 매매 계획의 균형을 더 잘 판단할 수 있습니다.</p>
     <h2 className="text-lg font-semibold text-slate-900">주의사항</h2>
     <p>손절 비율은 100% 미만이어야 하며, 실제 매매에서는 수수료와 슬리피지까지 함께 고려하는 것이 좋습니다.</p>
   </div>
@@ -29,6 +32,7 @@ export default function TargetPricePage() {
         description="진입가 기준 목표가와 손절가를 함께 계산해 매도 기준을 미리 정리합니다."
         currentSlug="target-price"
         explainerContent={explainer}
+        relatedGuides={getGuidesForTool('target-price')}
       >
         <TargetPriceCalculator />
       </CalculatorLayout>

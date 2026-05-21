@@ -1,10 +1,15 @@
 import { getGuideBySlug, getGuidesForTool, guides } from '@/lib/guides'
 
 describe('guide registry', () => {
-  it('keeps the first published guide in the guides index', () => {
+  it('keeps the published guides in the expected SEO order', () => {
     expect(guides.map((guide) => guide.slug)).toEqual([
       'averaging-down',
-      'overseas-capital-gains-tax'
+      'overseas-capital-gains-tax',
+      'return-rate-with-fees',
+      'dividend-yield-vs-dividend-income',
+      'target-price-and-stop-loss',
+      'compound-return-assumptions',
+      'fair-value-per-pbr'
     ])
   })
 
@@ -26,5 +31,37 @@ describe('guide registry', () => {
       href: '/guides/overseas-capital-gains-tax',
       relatedToolSlugs: ['overseas-capital-gains']
     })
+  })
+
+  it('returns the fee-aware return-rate guide by slug', () => {
+    expect(getGuideBySlug('return-rate-with-fees')).toMatchObject({
+      slug: 'return-rate-with-fees',
+      href: '/guides/return-rate-with-fees',
+      relatedToolSlugs: ['return-rate']
+    })
+  })
+
+  it('returns guides connected to the dividend calculator', () => {
+    expect(getGuidesForTool('dividend').map((guide) => guide.slug)).toEqual([
+      'dividend-yield-vs-dividend-income'
+    ])
+  })
+
+  it('returns guides connected to the target-price calculator', () => {
+    expect(getGuidesForTool('target-price').map((guide) => guide.slug)).toEqual([
+      'target-price-and-stop-loss'
+    ])
+  })
+
+  it('returns guides connected to the compound-return calculator', () => {
+    expect(getGuidesForTool('compound-return').map((guide) => guide.slug)).toEqual([
+      'compound-return-assumptions'
+    ])
+  })
+
+  it('returns guides connected to the fair-value calculator', () => {
+    expect(getGuidesForTool('fair-value').map((guide) => guide.slug)).toEqual([
+      'fair-value-per-pbr'
+    ])
   })
 })

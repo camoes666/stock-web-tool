@@ -2,6 +2,7 @@ import type { Metadata } from 'next'
 import DividendReinvestCalculator from '@/components/calculators/DividendReinvestCalculator'
 import JsonLd from '@/components/JsonLd'
 import CalculatorLayout from '@/components/layout/CalculatorLayout'
+import { getGuidesForTool } from '@/lib/guides'
 
 export const metadata: Metadata = {
   title: '배당 재투자 계산기 - 배당 복리 성장 계산',
@@ -15,6 +16,8 @@ const explainer = (
     <p>배당금을 다시 같은 종목에 투자한다고 가정했을 때 누적 배당금, 보유 수량, 예상 자산의 변화를 확인할 수 있습니다.</p>
     <h2 className="text-lg font-semibold text-slate-900">가정 조건</h2>
     <p>이 계산은 주가와 배당금이 일정하다고 가정한 단순 모델입니다. 실제 결과는 배당 정책과 주가 변동에 따라 달라집니다.</p>
+    <h2 className="text-lg font-semibold text-slate-900">어떻게 활용하면 좋을까요?</h2>
+    <p>현재 배당금 규모를 확인한 뒤, 같은 배당금을 다시 투자했을 때 장기적으로 보유 수량이 어떻게 늘어나는지 비교해 보면 계획을 세우기 쉽습니다.</p>
     <h2 className="text-lg font-semibold text-slate-900">활용 팁</h2>
     <p>배당 계산기와 함께 보면 현재 현금흐름과 장기 재투자 성장 효과를 나란히 비교하기 좋습니다.</p>
   </div>
@@ -33,6 +36,7 @@ export default function DividendReinvestPage() {
         description="배당금을 다시 투자할 때 보유 수량과 자산이 어떻게 늘어나는지 계산합니다."
         currentSlug="dividend-reinvest"
         explainerContent={explainer}
+        relatedGuides={getGuidesForTool('dividend-reinvest')}
       >
         <DividendReinvestCalculator />
       </CalculatorLayout>

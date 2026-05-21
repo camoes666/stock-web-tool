@@ -23,6 +23,12 @@ export default function AboutPage() {
           중심의 정보 지원 사이트입니다. 복잡한 회원가입이나 긴 설정 없이 바로 계산하고, 현재 판단에
           필요한 핵심 수치만 짧게 확인할 수 있도록 구성했습니다.
         </p>
+        <p className="mt-4 max-w-3xl text-base leading-7 text-slate-600">
+          이 사이트는 특정 종목의 매수·매도 추천보다, 투자자가 자신의 숫자를 직접 검토할 수 있게 돕는
+          참고 도구를 제공하는 데 초점을 둡니다. 계산 결과와 함께 사용법, 주의사항, 관련 개념을 설명하는
+          가이드 콘텐츠를 함께 운영해 단순 도구 모음이 아니라 실제로 읽을 수 있는 정보형 사이트를
+          지향합니다.
+        </p>
       </section>
 
       <section className="mt-8 grid gap-6 lg:grid-cols-[1.2fr_0.8fr]">
@@ -34,6 +40,10 @@ export default function AboutPage() {
           <p className="mt-4 text-sm leading-6 text-slate-600">
             물타기, 수익률, 배당, 목표가, 적정가처럼 투자 중 자주 확인하는 흐름을 중심으로 계산기를
             구성하고 있습니다.
+          </p>
+          <p className="mt-4 text-sm leading-6 text-slate-600">
+            각 계산기에는 입력값 의미, 계산 기준, 결과 해석법, 관련 가이드를 함께 붙여 초보 투자자도
+            흐름을 이해하기 쉽게 다듬고 있습니다.
           </p>
 
           <div className="mt-6 grid gap-4 sm:grid-cols-2">
