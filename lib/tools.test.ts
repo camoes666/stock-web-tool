@@ -1,4 +1,10 @@
-import { featuredTools, findToolBySlug, getRelatedTools, secondaryTools } from '@/lib/tools'
+import {
+  featuredTools,
+  findToolBySlug,
+  getRelatedTools,
+  homepageFeaturedTools,
+  secondaryTools
+} from '@/lib/tools'
 
 describe('tool presentation metadata', () => {
   it('keeps the six featured calculators in the approved homepage order', () => {
@@ -19,7 +25,8 @@ describe('tool presentation metadata', () => {
     expect(secondaryTools.map((tool) => tool.slug)).toEqual([
       'fair-value',
       'averaging-down-target',
-      'dividend-reinvest'
+      'dividend-reinvest',
+      'covered-call-distribution'
     ])
   })
 
@@ -29,6 +36,19 @@ describe('tool presentation metadata', () => {
       href: '/calculators/overseas-capital-gains',
       category: 'calculator'
     })
+  })
+
+  it('includes the covered-call distribution calculator in the registry', () => {
+    expect(findToolBySlug('covered-call-distribution')).toMatchObject({
+      slug: 'covered-call-distribution',
+      href: '/calculators/covered-call-distribution',
+      category: 'calculator'
+    })
+  })
+
+  it('surfaces the covered-call distribution calculator on the homepage without adding it to the navbar set', () => {
+    expect(homepageFeaturedTools[0]?.slug).toBe('covered-call-distribution')
+    expect(featuredTools.map((tool) => tool.slug)).not.toContain('covered-call-distribution')
   })
 
   it('returns related tools without including the current calculator', () => {

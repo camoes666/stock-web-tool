@@ -71,8 +71,8 @@ export const tools: Tool[] = [
     shortName: '적정가',
     purpose: '적정가 추정',
     description: 'EPS와 BPS를 바탕으로 적정가 범위를 계산합니다.',
-    summary: 'PER · PBR 기반 적정가 계산기',
-    icon: '🧮',
+    summary: 'PER·PBR 기반 적정가 계산기',
+    icon: '📌',
     href: '/calculators/fair-value',
     category: 'calculator',
     featured: false,
@@ -83,7 +83,7 @@ export const tools: Tool[] = [
     name: '복리 계산기',
     shortName: '복리',
     purpose: '복리 성장 확인',
-    description: '초기 투자금과 월 적립금으로 미래 자산을 시뮬레이션합니다.',
+    description: '초기 투자금과 월 적립금으로 미래 자산의 변화를 추정합니다.',
     summary: '장기 적립식 복리 계산기',
     icon: '📊',
     href: '/calculators/compound-return',
@@ -93,12 +93,12 @@ export const tools: Tool[] = [
   },
   {
     slug: 'averaging-down-target',
-    name: '추가 매수 계산기',
+    name: '평단가 계산기',
     shortName: '추가 매수',
-    purpose: '목표 단가 맞추기',
+    purpose: '목표 평단 맞추기',
     description: '원하는 평균단가까지 필요한 추가 수량과 금액을 계산합니다.',
     summary: '목표 평균단가 맞춤 계산기',
-    icon: '🪜',
+    icon: '🧮',
     href: '/calculators/averaging-down-target',
     category: 'calculator',
     featured: false,
@@ -110,8 +110,8 @@ export const tools: Tool[] = [
     shortName: '배당 재투자',
     purpose: '재투자 성장 확인',
     description: '배당 재투자 이후 보유 수량과 자산 증가를 계산합니다.',
-    summary: '배당 복리 · 재투자 성장 계산기',
-    icon: '🔁',
+    summary: '배당 복리·재투자 성장 계산기',
+    icon: '💸',
     href: '/calculators/dividend-reinvest',
     category: 'calculator',
     featured: false,
@@ -123,17 +123,35 @@ export const tools: Tool[] = [
     shortName: '해외주식 세금',
     purpose: '양도세 예상',
     description: '미국주식 등 해외주식의 원화 기준 양도차익, 예상 양도세, 세후 차익을 계산합니다.',
-    summary: '미국주식 양도세 · 세후 차익 계산기',
+    summary: '미국주식 양도세·세후 차익 계산기',
     icon: '🌍',
     href: '/calculators/overseas-capital-gains',
     category: 'calculator',
     featured: true,
     relatedSlugs: ['return-rate', 'multa', 'target-price']
+  },
+  {
+    slug: 'covered-call-distribution',
+    name: '커버드콜 월분배 계산기',
+    shortName: '월분배',
+    purpose: '세후 현금흐름 비교',
+    description: '커버드콜 ETF의 월분배금과 계좌별 세후 현금흐름을 비교합니다.',
+    summary: '커버드콜 ETF 월분배·세후 현금흐름 계산기',
+    icon: '💰',
+    href: '/calculators/covered-call-distribution',
+    category: 'calculator',
+    featured: false,
+    relatedSlugs: ['dividend', 'dividend-reinvest', 'compound-return']
   }
 ]
 
 export const featuredTools = tools.filter((tool) => tool.featured)
 export const secondaryTools = tools.filter((tool) => !tool.featured)
+
+export const homepageFeaturedTools = [
+  findToolBySlug('covered-call-distribution'),
+  ...featuredTools
+].filter((tool): tool is Tool => tool !== undefined)
 
 export function findToolBySlug(slug: string) {
   return tools.find((tool) => tool.slug === slug)

@@ -2,6 +2,7 @@ import {
   calcAveragingDownTarget,
   calcCompoundReturn,
   calcDividend,
+  calcCoveredCallDistributionIncome,
   calcDividendReinvest,
   calcFairValue,
   calcMulta,
@@ -177,5 +178,56 @@ describe('calcDividendReinvest', () => {
     expect(result.totalDividends).toBeCloseTo(624320, 1)
     expect(result.finalQty).toBeCloseTo(112.4864, 4)
     expect(result.finalAsset).toBeCloseTo(5624320, 1)
+  })
+})
+
+describe('calcCoveredCallDistributionIncome', () => {
+  it('계좌별 세후 월분배 현금흐름을 계산한다', () => {
+    const result = calcCoveredCallDistributionIncome({
+      investmentAmount: 10000000,
+      pricePerShare: 10000,
+      monthlyDistributionPerShare: 120,
+      accountType: 'general',
+      taxRatePercent: 15.4
+    })
+
+    expect(result.quantity).toBe(1000)
+    expect(result.monthlyGrossIncome).toBe(120000)
+    expect(result.monthlyTax).toBeCloseTo(18480, 2)
+    expect(result.monthlyNetIncome).toBeCloseTo(101520, 2)
+    expect(result.annualGrossIncome).toBe(1440000)
+    expect(result.annualNetIncome).toBeCloseTo(1218240, 2)
+  })
+
+  it('applies ISA exemption and separate tax after the limit', () => {
+    const result = calcCoveredCallDistributionIncome({
+      investmentAmount: 300000000,
+      pricePerShare: 10000,
+      monthlyDistributionPerShare: 120,
+      accountType: 'isa',
+      exemptionLimit: 2000000,
+      separateTaxRatePercent: 9
+    })
+
+    expect(result.quantity).toBe(30000)
+    expect(result.annualGrossIncome).toBe(43200000)
+    expect(result.annualTax).toBeCloseTo(3708000, 2)
+    expect(result.annualNetIncome).toBeCloseTo(39492000, 2)
+  })
+
+  it('keeps pension account comparison on a tax-deferred basis', () => {
+    const result = calcCoveredCallDistributionIncome({
+      investmentAmount: 10000000,
+      pricePerShare: 10000,
+      monthlyDistributionPerShare: 120,
+      accountType: 'pension'
+    })
+
+    expect(result.quantity).toBe(1000)
+    expect(result.monthlyGrossIncome).toBe(120000)
+    expect(result.monthlyTax).toBe(0)
+    expect(result.monthlyNetIncome).toBe(120000)
+    expect(result.annualTax).toBe(0)
+    expect(result.annualNetIncome).toBe(1440000)
   })
 })

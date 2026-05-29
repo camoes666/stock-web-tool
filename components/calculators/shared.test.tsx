@@ -7,8 +7,8 @@ import {
 } from '@/components/calculators/shared'
 
 describe('formatCurrency', () => {
-  it('formats KRW values without decimals', () => {
-    expect(formatCurrency(1200000, 'KRW')).toBe('₩1,200,000')
+  it('formats KRW values with a trailing won label', () => {
+    expect(formatCurrency(1200000, 'KRW')).toBe('1,200,000원')
   })
 
   it('formats USD values with decimals', () => {

@@ -136,6 +136,26 @@ export interface DividendReinvestResult {
   finalAsset: number
 }
 
+export interface CoveredCallDistributionIncomeInput {
+  investmentAmount: number
+  pricePerShare: number
+  monthlyDistributionPerShare: number
+  accountType: 'general' | 'isa' | 'pension'
+  taxRatePercent?: number
+  exemptionLimit?: number
+  separateTaxRatePercent?: number
+}
+
+export interface CoveredCallDistributionIncomeResult {
+  quantity: number
+  monthlyGrossIncome: number
+  monthlyTax: number
+  monthlyNetIncome: number
+  annualGrossIncome: number
+  annualTax: number
+  annualNetIncome: number
+}
+
 interface TradingCostInput {
   brokerFeePercent?: number
   transactionTaxPercent?: number
@@ -319,5 +339,36 @@ export function calcDividendReinvest(
     totalDividends,
     finalQty: currentQty,
     finalAsset: currentQty * input.stockPrice
+  }
+}
+
+export function calcCoveredCallDistributionIncome(
+  input: CoveredCallDistributionIncomeInput
+): CoveredCallDistributionIncomeResult {
+  const quantity = Math.floor(input.investmentAmount / input.pricePerShare)
+  const monthlyGrossIncome = quantity * input.monthlyDistributionPerShare
+  const annualGrossIncome = monthlyGrossIncome * 12
+
+  let annualTax = 0
+
+  if (input.accountType === 'general') {
+    annualTax = annualGrossIncome * toRate(input.taxRatePercent)
+  } else if (input.accountType === 'isa') {
+    const taxableBase = Math.max(0, annualGrossIncome - (input.exemptionLimit ?? 0))
+    annualTax = taxableBase * toRate(input.separateTaxRatePercent)
+  }
+
+  const annualNetIncome = annualGrossIncome - annualTax
+  const monthlyTax = annualTax / 12
+  const monthlyNetIncome = annualNetIncome / 12
+
+  return {
+    quantity,
+    monthlyGrossIncome,
+    monthlyTax,
+    monthlyNetIncome,
+    annualGrossIncome,
+    annualTax,
+    annualNetIncome
   }
 }

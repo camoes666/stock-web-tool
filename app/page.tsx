@@ -1,13 +1,13 @@
 import type { Metadata } from 'next'
+import AnalyticsLink from '@/components/analytics/AnalyticsLink'
 import GuideCard from '@/components/guides/GuideCard'
 import ToolCard from '@/components/home/ToolCard'
-import AnalyticsLink from '@/components/analytics/AnalyticsLink'
 import AdSlot from '@/components/layout/AdSlot'
 import { guides } from '@/lib/guides'
-import { featuredTools, secondaryTools } from '@/lib/tools'
+import { homepageFeaturedTools, secondaryTools, tools } from '@/lib/tools'
 
 export const metadata: Metadata = {
-  title: '주식 계산기 모음 - 수수료와 세금까지 보는 실손익 계산기',
+  title: '주식 계산기 모음 - 수수료와 세금까지 보는 실전 계산기',
   description:
     '물타기, 수익률, 해외주식 양도세, 배당, 목표가까지 수수료와 세금을 고려해 실제로 남는 돈을 확인하는 주식 계산기 허브입니다.'
 }
@@ -28,7 +28,7 @@ export default function HomePage() {
           </div>
 
           <div className="grid gap-3 sm:grid-cols-2 lg:min-w-[540px] lg:grid-cols-3">
-            {featuredTools.slice(0, 3).map((tool) => (
+            {homepageFeaturedTools.slice(0, 3).map((tool) => (
               <AnalyticsLink
                 key={tool.slug}
                 href={tool.href}
@@ -55,24 +55,24 @@ export default function HomePage() {
               수익률 말고, 실제로 남는 돈을 계산하세요
             </h2>
             <p className="mt-4 text-base leading-7 text-slate-600">
-              수수료, 거래세, 환율, 해외주식 양도세처럼 체감 수익을 바꾸는 비용을 함께 봅니다. 추가 매수,
+              수수료, 거래세, 환율, 해외주식 양도세처럼 체감 손익을 바꾸는 비용까지 함께 봅니다. 추가 매수,
               수익률, 배당 흐름부터 세후 차익까지 실제 판단에 필요한 숫자를 빠르게 확인하세요.
             </p>
             <p className="mt-4 text-base leading-7 text-slate-600">
               계산기만 나열하는 데서 멈추지 않고, 각 숫자가 왜 중요한지 이해할 수 있도록 설명형 가이드도
-              함께 운영합니다. 초보자 검색 의도와 실전 계산 수요를 모두 고려해 정보형 콘텐츠를 계속
-              보강하고 있습니다.
+              함께 운영합니다. 초보자 검색 의도와 실전 계산 수요를 모두 고려해 정보형 콘텐츠를 계속 보강하고
+              있습니다.
             </p>
           </div>
 
           <div className="rounded-2xl border border-slate-200 bg-white/85 px-4 py-3 text-sm text-slate-600">
-            <span className="font-semibold text-slate-900">{featuredTools.length + secondaryTools.length}개</span> 계산기를
-            실손익 관점으로 계속 다듬고 있습니다.
+            <span className="font-semibold text-slate-900">{tools.length}개</span>{' '}
+            계산기를 실손익 관점으로 계속 다듬고 있습니다.
           </div>
         </div>
 
         <div className="mt-8 grid gap-5 md:grid-cols-2 xl:grid-cols-3">
-          {featuredTools.map((tool) => (
+          {homepageFeaturedTools.map((tool) => (
             <ToolCard key={tool.slug} tool={tool} />
           ))}
         </div>
@@ -85,7 +85,9 @@ export default function HomePage() {
               <p className="text-sm font-semibold uppercase tracking-[0.16em] text-slate-500">All tools</p>
               <h3 className="mt-2 text-2xl font-semibold tracking-tight text-slate-950">실전 판단에 맞춘 계산기 목록</h3>
             </div>
-            <span className="rounded-full bg-brand-50 px-3 py-1 text-sm font-medium text-brand-700">비용 반영 흐름 강화</span>
+            <span className="rounded-full bg-brand-50 px-3 py-1 text-sm font-medium text-brand-700">
+              비용 반영 흐름 강화
+            </span>
           </div>
 
           <div className="mt-6 grid gap-4 sm:grid-cols-2">
