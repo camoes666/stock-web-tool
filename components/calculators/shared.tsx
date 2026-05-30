@@ -51,18 +51,23 @@ export function useStoredCurrency(defaultCurrency: CurrencyCode = 'KRW') {
 }
 
 export function formatCurrency(value: number, code: CurrencyCode) {
-  const formatted = new Intl.NumberFormat(currencyMeta[code].locale, {
+  if (code === 'KRW') {
+    const sign = value < 0 ? '-' : ''
+    const absoluteValue = Math.abs(value)
+    const formattedNumber = new Intl.NumberFormat(currencyMeta[code].locale, {
+      minimumFractionDigits: currencyMeta[code].minimumFractionDigits,
+      maximumFractionDigits: currencyMeta[code].minimumFractionDigits
+    }).format(absoluteValue)
+
+    return `${sign}${formattedNumber}원`
+  }
+
+  return new Intl.NumberFormat(currencyMeta[code].locale, {
     style: 'currency',
     currency: currencyMeta[code].currency,
     minimumFractionDigits: currencyMeta[code].minimumFractionDigits,
     maximumFractionDigits: currencyMeta[code].minimumFractionDigits
   }).format(value)
-
-  if (code === 'KRW') {
-    return formatted.replace(/^₩/, '') + '원'
-  }
-
-  return formatted
 }
 
 export function getCurrencyLabel(code: CurrencyCode) {
@@ -179,21 +184,21 @@ export function TradingCostFields({
         value={brokerFeePercent}
         onChange={onBrokerFeePercentChange}
         placeholder="0.015"
-        helpText="기본값은 0.015%, 필요하면 직접 수정하세요."
+        helpText="기본값은 0.015%, 필요하면 직접 수정해 주세요."
       />
       <CalculatorField
         label="거래세(%)"
         value={transactionTaxPercent}
         onChange={onTransactionTaxPercentChange}
         placeholder="0.20"
-        helpText="매도 때 반영할 거래세 비율입니다."
+        helpText="매도 시 반영할 거래세 비율입니다."
       />
       <CalculatorField
         label="기타 비용"
         value={extraCost}
         onChange={onExtraCostChange}
         placeholder="0"
-        helpText="환전 비용이나 별도 고정 비용을 입력하세요."
+        helpText="세전 비용이나 별도 고정 비용을 입력해 주세요."
       />
     </div>
   )

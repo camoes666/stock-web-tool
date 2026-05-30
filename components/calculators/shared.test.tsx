@@ -11,6 +11,10 @@ describe('formatCurrency', () => {
     expect(formatCurrency(1200000, 'KRW')).toBe('1,200,000원')
   })
 
+  it('formats negative KRW values without a leading W artifact', () => {
+    expect(formatCurrency(-998083, 'KRW')).toBe('-998,083원')
+  })
+
   it('formats USD values with decimals', () => {
     expect(formatCurrency(1200000.5, 'USD')).toBe('$1,200,000.50')
   })
