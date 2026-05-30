@@ -156,6 +156,17 @@ export interface CoveredCallDistributionIncomeResult {
   annualNetIncome: number
 }
 
+export interface CoveredCallScenarioResult {
+  label: string
+  priceChangePercent: number
+  evaluationProfitLoss: number
+  expectedTotalReturn: number
+}
+
+export interface CoveredCallTotalReturnResult extends CoveredCallDistributionIncomeResult {
+  scenarios: CoveredCallScenarioResult[]
+}
+
 interface TradingCostInput {
   brokerFeePercent?: number
   transactionTaxPercent?: number
@@ -173,6 +184,12 @@ interface TradingCostBreakdown {
 function toRate(percent: number | undefined) {
   return (percent ?? 0) / 100
 }
+
+const coveredCallScenarioRates = [
+  { label: '하락 -10%', priceChangePercent: -10 },
+  { label: '보합 0%', priceChangePercent: 0 },
+  { label: '상승 +10%', priceChangePercent: 10 }
+] as const
 
 function getTradingCostBreakdown(
   buyAmount: number,
@@ -370,5 +387,25 @@ export function calcCoveredCallDistributionIncome(
     annualGrossIncome,
     annualTax,
     annualNetIncome
+  }
+}
+
+export function calcCoveredCallTotalReturnScenarios(
+  input: CoveredCallDistributionIncomeInput
+): CoveredCallTotalReturnResult {
+  const income = calcCoveredCallDistributionIncome(input)
+
+  return {
+    ...income,
+    scenarios: coveredCallScenarioRates.map((scenario) => {
+      const evaluationProfitLoss =
+        income.quantity * input.pricePerShare * toRate(scenario.priceChangePercent)
+
+      return {
+        ...scenario,
+        evaluationProfitLoss,
+        expectedTotalReturn: income.annualNetIncome + evaluationProfitLoss
+      }
+    })
   }
 }

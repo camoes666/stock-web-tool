@@ -2,7 +2,7 @@
 
 import { useEffect, useMemo, useState } from 'react'
 import { trackCalculatorRun, trackCalculatorView } from '@/lib/analytics'
-import { calcCoveredCallDistributionIncome } from '@/lib/calculations'
+import { calcCoveredCallTotalReturnScenarios } from '@/lib/calculations'
 import type { AccountType } from '@/lib/etf-income/types'
 import type {
   CoveredCallCalculatorAccountDefaults,
@@ -14,7 +14,6 @@ import {
   CalculatorField,
   CalculatorSection,
   EmptyResult,
-  ResultCard,
   formatCurrency
 } from '@/components/calculators/shared'
 
@@ -30,8 +29,76 @@ const accountResultNotes: Record<AccountType, string> = {
   pension: '연금계좌는 과세이연 기준으로 비교하며, 실제 수령 시점 과세는 별도로 확인하세요.'
 }
 
-type CoveredCallDistributionComparisonResult = ReturnType<typeof calcCoveredCallDistributionIncome> & {
+type CoveredCallDistributionComparisonResult = ReturnType<typeof calcCoveredCallTotalReturnScenarios> & {
   accountType: AccountType
+}
+
+function MetricCard({
+  label,
+  value,
+  detail,
+  tone = 'default',
+  emphasis = 'compact'
+}: {
+  label: string
+  value: string
+  detail: string
+  tone?: 'default' | 'positive' | 'negative' | 'muted'
+  emphasis?: 'hero' | 'compact'
+}) {
+  const toneClass = {
+    default: 'border-slate-200 bg-white text-slate-950',
+    positive: 'border-emerald-200 bg-emerald-50/80 text-emerald-950',
+    negative: 'border-rose-200 bg-rose-50/80 text-rose-950',
+    muted: 'border-brand-100 bg-brand-50/80 text-brand-950'
+  }[tone]
+
+  return (
+    <div className={`rounded-2xl border p-4 ${toneClass}`}>
+      <p className="text-[11px] font-semibold uppercase tracking-[0.16em] opacity-70">{label}</p>
+      <p
+        className={`mt-3 whitespace-nowrap font-semibold tracking-tight ${
+          emphasis === 'hero' ? 'text-[clamp(1.6rem,2.8vw,2.4rem)]' : 'text-[clamp(1.2rem,2vw,1.75rem)]'
+        }`}
+      >
+        {value}
+      </p>
+      <p className="mt-2 text-xs leading-5 opacity-80">{detail}</p>
+    </div>
+  )
+}
+
+function ScenarioMetricCard({
+  label,
+  evaluationProfitLoss,
+  expectedTotalReturn
+}: {
+  label: string
+  evaluationProfitLoss: number
+  expectedTotalReturn: number
+}) {
+  const tone =
+    evaluationProfitLoss > 0 ? 'positive' : evaluationProfitLoss < 0 ? 'negative' : 'default'
+
+  return (
+    <div className="rounded-2xl border border-slate-200 bg-slate-50/80 p-4">
+      <p className="text-sm font-semibold text-slate-950">{label}</p>
+      <div className="mt-4 space-y-3">
+        <MetricCard
+          label="평가손익"
+          value={formatCurrency(evaluationProfitLoss, 'KRW')}
+          detail="기준 가격 대비 단순 시나리오 평가손익"
+          tone={tone}
+        />
+        <MetricCard
+          label="예상 총수익"
+          value={formatCurrency(expectedTotalReturn, 'KRW')}
+          detail="연간 세후 분배금에 평가손익을 더한 값"
+          tone={expectedTotalReturn >= 0 ? 'muted' : 'negative'}
+        />
+      </div>
+    </div>
+  )
 }
 
 export default function CoveredCallDistributionCalculator({
@@ -98,7 +165,7 @@ export default function CoveredCallDistributionCalculator({
 
     const nextResults = (['general', 'isa', 'pension'] as const).map((accountType) => ({
       accountType,
-      ...calcCoveredCallDistributionIncome({
+      ...calcCoveredCallTotalReturnScenarios({
         investmentAmount: parsedInvestmentAmount,
         pricePerShare: parsedPricePerShare,
         monthlyDistributionPerShare: parsedMonthlyDistributionPerShare,
@@ -186,53 +253,88 @@ export default function CoveredCallDistributionCalculator({
       <CalculatorSection
         eyebrow="Result"
         title={`${selectedEtf?.name ?? '선택한 ETF'} 기준 계좌별 현금흐름 비교`}
-        description="월 세전 분배금과 세후 수령액, 연간 누적 현금흐름, 예상 세금을 계좌별로 나란히 비교합니다. 주가 상승이나 하락에 따른 평가손익은 현재 버전에서 제외합니다."
+        description="월 세전 분배금과 세후 수령액, 연간 누적 현금흐름, 예상 세금을 계좌별로 나란히 비교합니다. 주가 시나리오별 총수익 참고값도 함께 보여줍니다."
       >
         {results ? (
           <div className="grid gap-4">
             {results.map((result) => (
-              <div key={result.accountType} className="rounded-2xl border border-slate-200 bg-slate-50/70 p-4">
-                <div className="mb-4 flex flex-col gap-1 sm:flex-row sm:items-end sm:justify-between">
+              <div
+                key={result.accountType}
+                className="rounded-[1.5rem] border border-slate-200 bg-slate-50/60 p-4 shadow-[0_10px_30px_rgba(15,23,42,0.04)]"
+              >
+                <div className="mb-5 flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
                   <div>
                     <h3 className="text-lg font-semibold text-slate-950">{accountLabels[result.accountType]}</h3>
                     <p className="mt-1 text-sm leading-6 text-slate-600">{accountResultNotes[result.accountType]}</p>
                   </div>
-                  <p className="text-xs font-medium text-slate-500">보유 수량 {result.quantity.toLocaleString()}주 기준</p>
+                  <div className="rounded-full border border-slate-200 bg-white px-3 py-1 text-xs font-medium text-slate-600">
+                    보유 수량 {result.quantity.toLocaleString()}주 기준
+                  </div>
                 </div>
 
-                <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-5">
-                  <ResultCard
+                <div className="mb-4 rounded-2xl border border-slate-200 bg-white/85 p-4">
+                  <p className="text-xs font-semibold uppercase tracking-[0.16em] text-slate-500">월별 현금흐름</p>
+                  <div className="mt-3 grid gap-4 lg:grid-cols-2">
+                    <MetricCard
+                      label="월 세후 수령액"
+                      value={formatCurrency(result.monthlyNetIncome, 'KRW')}
+                      tone="positive"
+                      emphasis="hero"
+                      detail="세금을 반영한 뒤 매달 손에 들어오는 기준 현금흐름"
+                    />
+                    <MetricCard
+                      label="연간 세후 수령액"
+                      value={formatCurrency(result.annualNetIncome, 'KRW')}
+                      emphasis="hero"
+                      detail="12개월 기준으로 누적한 세후 현금흐름"
+                    />
+                  </div>
+                </div>
+
+                <div className="mb-4 grid gap-3 sm:grid-cols-2 xl:grid-cols-3">
+                  <MetricCard
                     label="보유 수량"
                     value={`${result.quantity.toLocaleString()}주`}
                     tone="muted"
                     detail="투자 금액 기준으로 매수 가능한 수량"
                   />
-                  <ResultCard
+                  <MetricCard
                     label="월 세전 분배금"
                     value={formatCurrency(result.monthlyGrossIncome, 'KRW')}
-                    detail="주당 월분배금 x 보유 수량"
+                    detail="주당 월분배금과 보유 수량을 곱한 세전 금액"
                   />
-                  <ResultCard
-                    label="월 세후 수령액"
-                    value={formatCurrency(result.monthlyNetIncome, 'KRW')}
-                    tone="positive"
-                    detail="세금 반영 후 월 기준 현금흐름"
-                  />
-                  <ResultCard
-                    label="연간 세후 수령액"
-                    value={formatCurrency(result.annualNetIncome, 'KRW')}
-                    detail="12개월 기준 세후 누적 현금흐름"
-                  />
-                  <ResultCard
+                  <MetricCard
                     label="연간 예상 세금"
                     value={formatCurrency(result.annualTax, 'KRW')}
                     tone={result.annualTax > 0 ? 'negative' : 'default'}
                     detail={
                       result.accountType === 'pension'
-                        ? '현재 비교는 과세이연 기준이며 수령 시점 과세는 별도 확인이 필요합니다.'
+                        ? '현재 비교는 과세이연 기준이며, 실제 수령 시점 과세는 별도로 확인이 필요합니다.'
                         : '현재 가정한 세율과 한도를 반영한 연간 예상 세금'
                     }
                   />
+                </div>
+
+                <div className="rounded-2xl border border-slate-200 bg-white/85 p-4">
+                  <p className="text-xs font-semibold uppercase tracking-[0.16em] text-slate-500">
+                    주가 시나리오별 예상 총수익
+                  </p>
+                  <p className="mt-2 text-sm leading-6 text-slate-600">
+                    월분배 현금흐름에 더해 기준 가격 대비 주가 변동이 생기면 총수익이 어떻게 달라지는지 참고용으로 보여줍니다.
+                  </p>
+                  <div className="mt-4 grid gap-4 lg:grid-cols-3">
+                    {result.scenarios.map((scenario) => (
+                      <ScenarioMetricCard
+                        key={scenario.label}
+                        label={scenario.label}
+                        evaluationProfitLoss={scenario.evaluationProfitLoss}
+                        expectedTotalReturn={scenario.expectedTotalReturn}
+                      />
+                    ))}
+                  </div>
+                  <p className="mt-4 text-xs leading-5 text-slate-500">
+                    이 결과는 기준 가격 대비 단순 시나리오 계산이며, 실제 분배금 변동과 시장가격 변동은 다를 수 있습니다.
+                  </p>
                 </div>
               </div>
             ))}

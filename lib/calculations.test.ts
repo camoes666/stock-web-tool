@@ -3,6 +3,7 @@ import {
   calcCompoundReturn,
   calcDividend,
   calcCoveredCallDistributionIncome,
+  calcCoveredCallTotalReturnScenarios,
   calcDividendReinvest,
   calcFairValue,
   calcMulta,
@@ -229,5 +230,38 @@ describe('calcCoveredCallDistributionIncome', () => {
     expect(result.monthlyNetIncome).toBe(120000)
     expect(result.annualTax).toBe(0)
     expect(result.annualNetIncome).toBe(1440000)
+  })
+
+  it('derives covered-call total return scenarios from annual net income', () => {
+    const result = calcCoveredCallTotalReturnScenarios({
+      investmentAmount: 10000000,
+      pricePerShare: 10000,
+      monthlyDistributionPerShare: 120,
+      accountType: 'general',
+      taxRatePercent: 15.4
+    })
+
+    expect(result.quantity).toBe(1000)
+    expect(result.annualNetIncome).toBeCloseTo(1218240, 2)
+    expect(result.scenarios).toEqual([
+      expect.objectContaining({
+        label: '하락 -10%',
+        priceChangePercent: -10,
+        evaluationProfitLoss: -1000000,
+        expectedTotalReturn: 218240
+      }),
+      expect.objectContaining({
+        label: '보합 0%',
+        priceChangePercent: 0,
+        evaluationProfitLoss: 0,
+        expectedTotalReturn: 1218240
+      }),
+      expect.objectContaining({
+        label: '상승 +10%',
+        priceChangePercent: 10,
+        evaluationProfitLoss: 1000000,
+        expectedTotalReturn: 2218240
+      })
+    ])
   })
 })
