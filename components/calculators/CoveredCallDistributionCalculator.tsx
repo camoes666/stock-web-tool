@@ -23,6 +23,8 @@ const accountLabels: Record<AccountType, string> = {
   pension: '연금계좌'
 }
 
+const exampleInvestmentAmounts = [5000000, 10000000, 30000000] as const
+
 const accountResultNotes: Record<AccountType, string> = {
   general: '배당소득세 기본 가정을 반영한 세후 현금흐름입니다.',
   isa: '비과세 한도 초과분에 대한 분리과세 가정을 반영했습니다.',
@@ -83,17 +85,17 @@ function ScenarioMetricCard({
   return (
     <div className="rounded-2xl border border-slate-200 bg-slate-50/80 p-4">
       <p className="text-sm font-semibold text-slate-950">{label}</p>
-      <div className="mt-4 space-y-3">
+      <div className="mt-4 grid gap-3 sm:grid-cols-2">
         <MetricCard
           label="평가손익"
           value={formatCurrency(evaluationProfitLoss, 'KRW')}
-          detail="기준 가격 대비 단순 시나리오 평가손익"
+          detail="기준 가격 대비 손익"
           tone={tone}
         />
         <MetricCard
           label="예상 총수익"
           value={formatCurrency(expectedTotalReturn, 'KRW')}
-          detail="연간 세후 분배금에 평가손익을 더한 값"
+          detail="연간 세후 분배금 + 평가손익"
           tone={expectedTotalReturn >= 0 ? 'muted' : 'negative'}
         />
       </div>
@@ -129,6 +131,16 @@ export default function CoveredCallDistributionCalculator({
     () => etfOptions.find((option) => option.symbol === selectedSymbol) ?? defaultOption,
     [defaultOption, etfOptions, selectedSymbol]
   )
+
+  function applyExample(amount: number) {
+    if (selectedEtf) {
+      setPricePerShare(String(selectedEtf.priceReference))
+      setMonthlyDistributionPerShare(String(selectedEtf.monthlyDistributionPerShare))
+    }
+
+    setInvestmentAmount(String(amount))
+    setError('')
+  }
 
   function handleEtfChange(value: string) {
     setSelectedSymbol(value)
@@ -188,10 +200,10 @@ export default function CoveredCallDistributionCalculator({
       <CalculatorSection
         eyebrow="Input"
         title="ETF와 투자 금액을 입력하세요"
-        description="대표 커버드콜 ETF를 선택하고 투자 금액을 넣으면 일반계좌, ISA, 연금계좌 기준 월 세전·세후 현금흐름을 비교합니다."
+        description="대표 커버드콜 ETF를 선택하고 투자 금액을 넣으면 일반계좌, ISA, 연금계좌 기준 월 세전·세후 현금흐름과 주가 시나리오별 총수익 참고값을 함께 비교합니다."
       >
         <p className="mb-4 text-sm leading-6 text-slate-500">
-          이 계산기는 주가 변동을 제외한 월분배 현금흐름 비교용입니다.
+          처음이면 대표 예시값으로 먼저 계산해본 뒤, 투자 금액과 분배금을 바꿔 보는 흐름이 가장 이해하기 쉽습니다.
         </p>
         {etfOptions.length === 0 ? (
           <EmptyResult
@@ -218,6 +230,31 @@ export default function CoveredCallDistributionCalculator({
                   ))}
                 </select>
               </label>
+
+              <div className="rounded-2xl border border-brand-100 bg-brand-50/80 p-4 sm:col-span-3">
+                <div className="flex flex-col gap-3 lg:flex-row lg:items-end lg:justify-between">
+                  <div>
+                    <p className="text-sm font-semibold text-slate-950">빠른 예시 입력</p>
+                    <p className="mt-1 text-xs leading-5 text-slate-600">
+                      {selectedEtf?.name ?? '선택한 ETF'} 기준 가격 {formatCurrency(selectedEtf?.priceReference ?? 0, 'KRW')},
+                      주당 월분배금 {formatCurrency(selectedEtf?.monthlyDistributionPerShare ?? 0, 'KRW')}을 기준으로 바로
+                      계산해볼 수 있습니다.
+                    </p>
+                  </div>
+                  <div className="flex flex-wrap gap-2">
+                    {exampleInvestmentAmounts.map((amount) => (
+                      <button
+                        key={amount}
+                        type="button"
+                        onClick={() => applyExample(amount)}
+                        className="rounded-full border border-brand-200 bg-white px-4 py-2 text-xs font-semibold text-brand-700 transition hover:border-brand-300 hover:bg-brand-50"
+                      >
+                        {`${Math.round(amount / 10000).toLocaleString()}만원 예시`}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              </div>
 
               <CalculatorField
                 label="투자 금액 (원)"
@@ -316,12 +353,20 @@ export default function CoveredCallDistributionCalculator({
                 </div>
 
                 <div className="rounded-2xl border border-slate-200 bg-white/85 p-4">
-                  <p className="text-xs font-semibold uppercase tracking-[0.16em] text-slate-500">
-                    주가 시나리오별 예상 총수익
-                  </p>
-                  <p className="mt-2 text-sm leading-6 text-slate-600">
-                    월분배 현금흐름에 더해 기준 가격 대비 주가 변동이 생기면 총수익이 어떻게 달라지는지 참고용으로 보여줍니다.
-                  </p>
+                  <div className="rounded-2xl border border-brand-100 bg-brand-50/70 p-4">
+                    <p className="text-xs font-semibold uppercase tracking-[0.16em] text-brand-700">
+                      주가 시나리오 읽는 법
+                    </p>
+                    <p className="mt-2 text-sm leading-6 text-slate-700">
+                      월분배가 높아 보여도 주가가 하락하면 실제 남는 총수익은 빠르게 달라질 수 있습니다. 아래 카드는
+                      연간 세후 분배금에 주가 변동 손익을 더한 참고값입니다.
+                    </p>
+                  </div>
+                  <div className="mt-4 flex flex-wrap gap-2 text-xs font-medium text-slate-600">
+                    <span className="rounded-full border border-slate-200 bg-slate-50 px-3 py-1">하락 시 손실 방어 확인</span>
+                    <span className="rounded-full border border-slate-200 bg-slate-50 px-3 py-1">보합 시 현금흐름 확인</span>
+                    <span className="rounded-full border border-slate-200 bg-slate-50 px-3 py-1">상승 시 총수익 확인</span>
+                  </div>
                   <div className="mt-4 grid gap-4 lg:grid-cols-3">
                     {result.scenarios.map((scenario) => (
                       <ScenarioMetricCard
@@ -333,7 +378,7 @@ export default function CoveredCallDistributionCalculator({
                     ))}
                   </div>
                   <p className="mt-4 text-xs leading-5 text-slate-500">
-                    이 결과는 기준 가격 대비 단순 시나리오 계산이며, 실제 분배금 변동과 시장가격 변동은 다를 수 있습니다.
+                    이 결과는 기준 가격 대비 단순 시나리오 참고값이며, 실제 분배금 변동과 시장가격 변동은 다를 수 있습니다.
                   </p>
                 </div>
               </div>

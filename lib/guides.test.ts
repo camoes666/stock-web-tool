@@ -3,6 +3,7 @@ import { getGuideBySlug, getGuidesForTool, guides } from '@/lib/guides'
 describe('guide registry', () => {
   it('keeps the published guides in the expected SEO order', () => {
     expect(guides.map((guide) => guide.slug)).toEqual([
+      'covered-call-monthly-distribution-trap',
       'averaging-down',
       'overseas-capital-gains-tax',
       'return-rate-with-fees',
@@ -10,6 +11,20 @@ describe('guide registry', () => {
       'target-price-and-stop-loss',
       'compound-return-assumptions',
       'fair-value-per-pbr'
+    ])
+  })
+
+  it('returns the covered-call guide by slug', () => {
+    expect(getGuideBySlug('covered-call-monthly-distribution-trap')).toMatchObject({
+      slug: 'covered-call-monthly-distribution-trap',
+      href: '/guides/covered-call-monthly-distribution-trap',
+      relatedToolSlugs: ['covered-call-distribution']
+    })
+  })
+
+  it('returns guides connected to the covered-call calculator', () => {
+    expect(getGuidesForTool('covered-call-distribution').map((guide) => guide.slug)).toEqual([
+      'covered-call-monthly-distribution-trap'
     ])
   })
 
