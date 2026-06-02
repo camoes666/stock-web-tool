@@ -61,7 +61,7 @@ function MetricCard({
   }[tone]
 
   return (
-    <div className={`rounded-2xl border p-4 ${toneClass}`}>
+    <div className={`flex h-full flex-col rounded-2xl border p-4 ${toneClass}`}>
       <p className="text-[11px] font-semibold uppercase tracking-[0.16em] opacity-70">{label}</p>
       <p
         className={`mt-3 whitespace-nowrap font-semibold tracking-tight ${
@@ -98,7 +98,7 @@ function ScenarioMetricCard({
   return (
     <div className={`rounded-2xl border p-4 ${shellClass}`}>
       <p className="text-sm font-semibold text-slate-950">{label}</p>
-      <div className="mt-4 grid gap-3">
+      <div className="mt-4 grid auto-rows-fr gap-3">
         <MetricCard
           label="평가손익"
           value={formatCurrency(evaluationProfitLoss, 'KRW')}
