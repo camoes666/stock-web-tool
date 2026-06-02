@@ -65,7 +65,9 @@ function MetricCard({
       <p className="text-[11px] font-semibold uppercase tracking-[0.16em] opacity-70">{label}</p>
       <p
         className={`mt-3 whitespace-nowrap font-semibold tracking-tight ${
-          emphasis === 'hero' ? 'text-[clamp(1.6rem,2.8vw,2.4rem)]' : 'text-[clamp(1.2rem,2vw,1.75rem)]'
+          emphasis === 'hero'
+            ? 'text-[clamp(1.6rem,2.8vw,2.4rem)]'
+            : 'whitespace-normal break-keep text-[clamp(1rem,1.55vw,1.5rem)] leading-tight'
         }`}
       >
         {value}
