@@ -98,7 +98,7 @@ function ScenarioMetricCard({
   return (
     <div className={`rounded-2xl border p-4 ${shellClass}`}>
       <p className="text-sm font-semibold text-slate-950">{label}</p>
-      <div className="mt-4 grid gap-3 xl:grid-cols-2">
+      <div className="mt-4 grid gap-3">
         <MetricCard
           label="평가손익"
           value={formatCurrency(evaluationProfitLoss, 'KRW')}
