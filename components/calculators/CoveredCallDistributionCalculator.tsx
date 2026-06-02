@@ -2,7 +2,10 @@
 
 import { useEffect, useMemo, useState } from 'react'
 import { trackCalculatorRun, trackCalculatorView } from '@/lib/analytics'
-import { calcCoveredCallTotalReturnScenarios } from '@/lib/calculations'
+import {
+  calcCoveredCallSummaryInsight,
+  calcCoveredCallTotalReturnScenarios
+} from '@/lib/calculations'
 import type { AccountType } from '@/lib/etf-income/types'
 import type {
   CoveredCallCalculatorAccountDefaults,
@@ -45,14 +48,16 @@ function MetricCard({
   label: string
   value: string
   detail: string
-  tone?: 'default' | 'positive' | 'negative' | 'muted'
+  tone?: 'default' | 'positive' | 'negative' | 'muted' | 'info' | 'warning'
   emphasis?: 'hero' | 'compact'
 }) {
   const toneClass = {
     default: 'border-slate-200 bg-white text-slate-950',
     positive: 'border-emerald-200 bg-emerald-50/80 text-emerald-950',
     negative: 'border-rose-200 bg-rose-50/80 text-rose-950',
-    muted: 'border-brand-100 bg-brand-50/80 text-brand-950'
+    muted: 'border-brand-100 bg-brand-50/80 text-brand-950',
+    info: 'border-sky-200 bg-sky-50/80 text-sky-950',
+    warning: 'border-amber-200 bg-amber-50/80 text-amber-950'
   }[tone]
 
   return (
@@ -81,9 +86,15 @@ function ScenarioMetricCard({
 }) {
   const tone =
     evaluationProfitLoss > 0 ? 'positive' : evaluationProfitLoss < 0 ? 'negative' : 'default'
+  const shellClass =
+    evaluationProfitLoss > 0
+      ? 'border-emerald-200 bg-emerald-50/70'
+      : evaluationProfitLoss < 0
+        ? 'border-rose-200 bg-rose-50/70'
+        : 'border-slate-200 bg-slate-50/90'
 
   return (
-    <div className="rounded-2xl border border-slate-200 bg-slate-50/80 p-4">
+    <div className={`rounded-2xl border p-4 ${shellClass}`}>
       <p className="text-sm font-semibold text-slate-950">{label}</p>
       <div className="mt-4 grid gap-3 sm:grid-cols-2">
         <MetricCard
@@ -96,7 +107,7 @@ function ScenarioMetricCard({
           label="예상 총수익"
           value={formatCurrency(expectedTotalReturn, 'KRW')}
           detail="연간 세후 분배금 + 평가손익"
-          tone={expectedTotalReturn >= 0 ? 'muted' : 'negative'}
+          tone={expectedTotalReturn >= 0 ? 'info' : 'negative'}
         />
       </div>
     </div>
@@ -130,6 +141,10 @@ export default function CoveredCallDistributionCalculator({
   const selectedEtf = useMemo(
     () => etfOptions.find((option) => option.symbol === selectedSymbol) ?? defaultOption,
     [defaultOption, etfOptions, selectedSymbol]
+  )
+  const summaryInsight = useMemo(
+    () => (results ? calcCoveredCallSummaryInsight(results) : null),
+    [results]
   )
 
   function applyExample(amount: number) {
@@ -294,6 +309,23 @@ export default function CoveredCallDistributionCalculator({
       >
         {results ? (
           <div className="grid gap-4">
+            {summaryInsight ? (
+              <div className="rounded-[1.5rem] border border-sky-200 bg-sky-50/85 p-5 shadow-[0_12px_30px_rgba(14,165,233,0.08)]">
+                <p className="text-xs font-semibold uppercase tracking-[0.18em] text-sky-700">한눈에 보기</p>
+                <div className="mt-4 grid gap-3 lg:grid-cols-2">
+                  <div className="rounded-2xl border border-sky-200 bg-white/80 p-4">
+                    <p className="text-xs font-semibold uppercase tracking-[0.16em] text-sky-700">가장 유리한 계좌</p>
+                    <p className="mt-2 text-base font-semibold text-slate-950">{summaryInsight.leadMessage}</p>
+                  </div>
+                  <div className="rounded-2xl border border-amber-200 bg-white/80 p-4">
+                    <p className="text-xs font-semibold uppercase tracking-[0.16em] text-amber-700">주의 포인트</p>
+                    <p className="mt-2 text-base font-semibold text-slate-950">{summaryInsight.cautionMessage}</p>
+                  </div>
+                </div>
+                <p className="mt-4 text-xs leading-5 text-slate-600">입력한 값 기준 참고 해석입니다.</p>
+              </div>
+            ) : null}
+
             {results.map((result) => (
               <div
                 key={result.accountType}
@@ -322,6 +354,7 @@ export default function CoveredCallDistributionCalculator({
                     <MetricCard
                       label="연간 세후 수령액"
                       value={formatCurrency(result.annualNetIncome, 'KRW')}
+                      tone="info"
                       emphasis="hero"
                       detail="12개월 기준으로 누적한 세후 현금흐름"
                     />
@@ -343,7 +376,7 @@ export default function CoveredCallDistributionCalculator({
                   <MetricCard
                     label="연간 예상 세금"
                     value={formatCurrency(result.annualTax, 'KRW')}
-                    tone={result.annualTax > 0 ? 'negative' : 'default'}
+                    tone={result.annualTax > 0 ? 'warning' : 'default'}
                     detail={
                       result.accountType === 'pension'
                         ? '현재 비교는 과세이연 기준이며, 실제 수령 시점 과세는 별도로 확인이 필요합니다.'

@@ -57,6 +57,14 @@ describe('CoveredCallDistributionCalculator', () => {
       )
     ).toHaveLength(3)
     expect(screen.getAllByText('하락 시 손실 방어 확인')).toHaveLength(3)
+    expect(screen.getByText('한눈에 보기')).toBeInTheDocument()
+    expect(screen.getByText('가장 유리한 계좌')).toBeInTheDocument()
+    expect(screen.getByText('주의 포인트')).toBeInTheDocument()
+    expect(screen.getByText('세후 월수령액 기준으로 계좌 간 차이는 크지 않습니다.')).toBeInTheDocument()
+    expect(
+      screen.getByText('다만 주가 -10% 하락 시에는 계좌 차이보다 가격 하락 영향이 더 크게 나타납니다.')
+    ).toBeInTheDocument()
+    expect(screen.getByText('입력한 값 기준 참고 해석입니다.')).toBeInTheDocument()
   })
 
   it('applies quick example investment amounts for faster first calculation', () => {

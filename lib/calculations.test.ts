@@ -3,6 +3,7 @@ import {
   calcCompoundReturn,
   calcDividend,
   calcCoveredCallDistributionIncome,
+  calcCoveredCallSummaryInsight,
   calcCoveredCallTotalReturnScenarios,
   calcDividendReinvest,
   calcFairValue,
@@ -263,5 +264,75 @@ describe('calcCoveredCallDistributionIncome', () => {
         expectedTotalReturn: 2218240
       })
     ])
+  })
+
+  it('summarizes the leading account and downside warning for covered-call comparisons', () => {
+    const summary = calcCoveredCallSummaryInsight([
+      {
+        accountType: 'general',
+        monthlyNetIncome: 101520,
+        annualNetIncome: 1218240,
+        scenarios: [
+          { label: '하락 -10%', priceChangePercent: -10, evaluationProfitLoss: -1000000, expectedTotalReturn: 218240 },
+          { label: '보합 0%', priceChangePercent: 0, evaluationProfitLoss: 0, expectedTotalReturn: 1218240 },
+          { label: '상승 +10%', priceChangePercent: 10, evaluationProfitLoss: 1000000, expectedTotalReturn: 2218240 }
+        ]
+      },
+      {
+        accountType: 'isa',
+        monthlyNetIncome: 121500,
+        annualNetIncome: 1458000,
+        scenarios: [
+          { label: '하락 -10%', priceChangePercent: -10, evaluationProfitLoss: -1000000, expectedTotalReturn: 458000 },
+          { label: '보합 0%', priceChangePercent: 0, evaluationProfitLoss: 0, expectedTotalReturn: 1458000 },
+          { label: '상승 +10%', priceChangePercent: 10, evaluationProfitLoss: 1000000, expectedTotalReturn: 2458000 }
+        ]
+      },
+      {
+        accountType: 'pension',
+        monthlyNetIncome: 120000,
+        annualNetIncome: 1440000,
+        scenarios: [
+          { label: '하락 -10%', priceChangePercent: -10, evaluationProfitLoss: -1000000, expectedTotalReturn: 440000 },
+          { label: '보합 0%', priceChangePercent: 0, evaluationProfitLoss: 0, expectedTotalReturn: 1440000 },
+          { label: '상승 +10%', priceChangePercent: 10, evaluationProfitLoss: 1000000, expectedTotalReturn: 2440000 }
+        ]
+      }
+    ])
+
+    expect(summary.leadingAccountType).toBe('isa')
+    expect(summary.leadMessage).toBe('세후 월수령액 기준으로는 ISA 계좌가 가장 유리합니다.')
+    expect(summary.cautionMessage).toBe(
+      '다만 주가 -10% 하락 시에는 계좌 차이보다 가격 하락 영향이 더 크게 나타납니다.'
+    )
+  })
+
+  it('uses a softer summary when monthly net income gaps are small or downside turns negative', () => {
+    const summary = calcCoveredCallSummaryInsight([
+      {
+        accountType: 'general',
+        monthlyNetIncome: 100000,
+        annualNetIncome: 1200000,
+        scenarios: [
+          { label: '하락 -10%', priceChangePercent: -10, evaluationProfitLoss: -1500000, expectedTotalReturn: -300000 },
+          { label: '보합 0%', priceChangePercent: 0, evaluationProfitLoss: 0, expectedTotalReturn: 1200000 },
+          { label: '상승 +10%', priceChangePercent: 10, evaluationProfitLoss: 1500000, expectedTotalReturn: 2700000 }
+        ]
+      },
+      {
+        accountType: 'isa',
+        monthlyNetIncome: 100500,
+        annualNetIncome: 1206000,
+        scenarios: [
+          { label: '하락 -10%', priceChangePercent: -10, evaluationProfitLoss: -1500000, expectedTotalReturn: -294000 },
+          { label: '보합 0%', priceChangePercent: 0, evaluationProfitLoss: 0, expectedTotalReturn: 1206000 },
+          { label: '상승 +10%', priceChangePercent: 10, evaluationProfitLoss: 1500000, expectedTotalReturn: 2706000 }
+        ]
+      }
+    ])
+
+    expect(summary.leadingAccountType).toBeNull()
+    expect(summary.leadMessage).toBe('세후 월수령액 기준으로 계좌 간 차이는 크지 않습니다.')
+    expect(summary.cautionMessage).toBe('주가 -10% 하락 시에는 세후 분배금이 있어도 총수익이 음수로 바뀔 수 있습니다.')
   })
 })

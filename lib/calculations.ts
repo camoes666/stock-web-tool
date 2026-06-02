@@ -167,6 +167,20 @@ export interface CoveredCallTotalReturnResult extends CoveredCallDistributionInc
   scenarios: CoveredCallScenarioResult[]
 }
 
+export interface CoveredCallSummaryAccountSnapshot {
+  accountType: 'general' | 'isa' | 'pension'
+  monthlyNetIncome: number
+  annualNetIncome: number
+  scenarios: CoveredCallScenarioResult[]
+}
+
+export interface CoveredCallSummaryInsight {
+  leadingAccountType: 'general' | 'isa' | 'pension' | null
+  leadingAccountDifference: number
+  leadMessage: string
+  cautionMessage: string
+}
+
 interface TradingCostInput {
   brokerFeePercent?: number
   transactionTaxPercent?: number
@@ -190,6 +204,12 @@ const coveredCallScenarioRates = [
   { label: '보합 0%', priceChangePercent: 0 },
   { label: '상승 +10%', priceChangePercent: 10 }
 ] as const
+
+const coveredCallAccountLabels = {
+  general: '일반',
+  isa: 'ISA',
+  pension: '연금'
+} as const
 
 function getTradingCostBreakdown(
   buyAmount: number,
@@ -407,5 +427,55 @@ export function calcCoveredCallTotalReturnScenarios(
         expectedTotalReturn: income.annualNetIncome + evaluationProfitLoss
       }
     })
+  }
+}
+
+export function calcCoveredCallSummaryInsight(
+  results: CoveredCallSummaryAccountSnapshot[]
+): CoveredCallSummaryInsight {
+  if (results.length === 0) {
+    return {
+      leadingAccountType: null,
+      leadingAccountDifference: 0,
+      leadMessage: '세후 월수령액 비교 결과가 아직 없습니다.',
+      cautionMessage: '입력한 값 기준 참고 해석입니다.'
+    }
+  }
+
+  const sortedByMonthlyNet = [...results].sort((left, right) => right.monthlyNetIncome - left.monthlyNetIncome)
+  const leadingResult = sortedByMonthlyNet[0]
+  const runnerUpResult = sortedByMonthlyNet[1] ?? leadingResult
+  const leadingAccountDifference = leadingResult.monthlyNetIncome - runnerUpResult.monthlyNetIncome
+  const isMeaningfulGap = leadingAccountDifference > 1000
+
+  const leadMessage = isMeaningfulGap
+    ? `세후 월수령액 기준으로는 ${coveredCallAccountLabels[leadingResult.accountType]} 계좌가 가장 유리합니다.`
+    : '세후 월수령액 기준으로 계좌 간 차이는 크지 않습니다.'
+
+  const downScenarios = results
+    .map((result) => result.scenarios.find((scenario) => scenario.priceChangePercent === -10))
+    .filter((scenario): scenario is CoveredCallScenarioResult => Boolean(scenario))
+
+  const hasNegativeDownsideReturn = downScenarios.some((scenario) => scenario.expectedTotalReturn < 0)
+  const downsideImpact = Math.max(...downScenarios.map((scenario) => Math.abs(scenario.evaluationProfitLoss)))
+  const annualNetSpread =
+    Math.max(...results.map((result) => result.annualNetIncome)) -
+    Math.min(...results.map((result) => result.annualNetIncome))
+
+  let cautionMessage = '입력한 값 기준 참고 해석입니다.'
+
+  if (hasNegativeDownsideReturn) {
+    cautionMessage = '주가 -10% 하락 시에는 세후 분배금이 있어도 총수익이 음수로 바뀔 수 있습니다.'
+  } else if (downsideImpact > annualNetSpread) {
+    cautionMessage = '다만 주가 -10% 하락 시에는 계좌 차이보다 가격 하락 영향이 더 크게 나타납니다.'
+  } else {
+    cautionMessage = '하락 시나리오에서도 계좌별 세후 차이를 함께 확인해보세요.'
+  }
+
+  return {
+    leadingAccountType: isMeaningfulGap ? leadingResult.accountType : null,
+    leadingAccountDifference,
+    leadMessage,
+    cautionMessage
   }
 }
