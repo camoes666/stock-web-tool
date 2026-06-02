@@ -98,7 +98,7 @@ function ScenarioMetricCard({
   return (
     <div className={`rounded-2xl border p-4 ${shellClass}`}>
       <p className="text-sm font-semibold text-slate-950">{label}</p>
-      <div className="mt-4 grid gap-3 sm:grid-cols-2">
+      <div className="mt-4 grid gap-3 xl:grid-cols-2">
         <MetricCard
           label="평가손익"
           value={formatCurrency(evaluationProfitLoss, 'KRW')}
@@ -402,7 +402,7 @@ export default function CoveredCallDistributionCalculator({
                     <span className="rounded-full border border-slate-200 bg-slate-50 px-3 py-1">보합 시 현금흐름 확인</span>
                     <span className="rounded-full border border-slate-200 bg-slate-50 px-3 py-1">상승 시 총수익 확인</span>
                   </div>
-                  <div className="mt-4 grid gap-4 lg:grid-cols-3">
+                  <div className="mt-4 grid gap-4 xl:grid-cols-3">
                     {result.scenarios.map((scenario) => (
                       <ScenarioMetricCard
                         key={scenario.label}
