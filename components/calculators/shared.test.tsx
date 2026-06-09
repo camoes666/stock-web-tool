@@ -1,5 +1,6 @@
 import { fireEvent, render, screen } from '@testing-library/react'
 import {
+  CalculatorField,
   CurrencySelector,
   TradingCostFields,
   formatCurrency,
@@ -91,5 +92,30 @@ describe('TradingCostFields', () => {
     expect(handleFeeChange).toHaveBeenCalledWith('0.03')
     expect(handleTaxChange).toHaveBeenCalledWith('0.25')
     expect(handleExtraCostChange).toHaveBeenCalledWith('5000')
+  })
+})
+
+describe('CalculatorField', () => {
+  it('calls onFirstInteraction only once across multiple edits', () => {
+    const handleChange = jest.fn()
+    const handleFirstInteraction = jest.fn()
+
+    render(
+      <CalculatorField
+        label="Input"
+        value=""
+        onChange={handleChange}
+        onFirstInteraction={handleFirstInteraction}
+        placeholder="100"
+      />
+    )
+
+    const input = screen.getByPlaceholderText('100')
+
+    fireEvent.change(input, { target: { value: '1' } })
+    fireEvent.change(input, { target: { value: '12' } })
+
+    expect(handleChange).toHaveBeenCalledTimes(2)
+    expect(handleFirstInteraction).toHaveBeenCalledTimes(1)
   })
 })

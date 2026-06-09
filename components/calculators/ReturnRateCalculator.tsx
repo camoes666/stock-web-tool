@@ -1,7 +1,7 @@
 'use client'
 
-import { useEffect, useState } from 'react'
-import { trackCalculatorRun, trackCalculatorView } from '@/lib/analytics'
+import { useState } from 'react'
+import { trackCalculatorRun } from '@/lib/analytics'
 import { calcReturnRate, type ReturnRateInput } from '@/lib/calculations'
 import {
   CalculatorActionButton,
@@ -17,24 +17,24 @@ import {
   getCurrencyLabel,
   useStoredCurrency
 } from '@/components/calculators/shared'
+import { useCalculatorTracking } from '@/components/calculators/useCalculatorTracking'
 
 export default function ReturnRateCalculator() {
   const [currency, setCurrency] = useStoredCurrency()
   const [buyPrice, setBuyPrice] = useState('')
   const [currentPrice, setCurrentPrice] = useState('')
   const [qty, setQty] = useState('')
+  const [showAdvancedOptions, setShowAdvancedOptions] = useState(false)
   const [brokerFeePercent, setBrokerFeePercent] = useState('0.015')
   const [transactionTaxPercent, setTransactionTaxPercent] = useState('0.20')
   const [extraCost, setExtraCost] = useState('0')
   const [error, setError] = useState('')
   const [result, setResult] = useState<ReturnType<typeof calcReturnRate> | null>(null)
-
-  useEffect(() => {
-    trackCalculatorView({
-      calculator_name: 'return-rate',
-      calculator_category: 'stock'
-    })
-  }, [])
+  const { trackInputStart } = useCalculatorTracking({
+    calculatorName: 'return-rate',
+    calculatorCategory: 'stock',
+    hasResult: result !== null
+  })
 
   function handleCalc() {
     const input: ReturnRateInput = {
@@ -96,7 +96,7 @@ export default function ReturnRateCalculator() {
       <CalculatorSection
         eyebrow="Input"
         title="매수가와 현재가를 입력하세요"
-        description="기본 수익률과 실손익을 함께 계산해 현재 포지션의 체감 성과를 빠르게 확인할 수 있습니다."
+        description="매수가, 현재가, 보유 수량만 먼저 넣으면 기본 수익률을 바로 계산하고, 필요할 때만 고급 옵션으로 실손익까지 확인할 수 있습니다."
       >
         <div className="mb-5 flex items-center justify-between gap-4">
           <div>
@@ -111,6 +111,7 @@ export default function ReturnRateCalculator() {
             label={`매수가 (${currencyLabel})`}
             value={buyPrice}
             onChange={setBuyPrice}
+            onFirstInteraction={trackInputStart}
             placeholder="50000"
             helpText={`평균 매수 단가를 입력하세요. 예: ${moneyExample}`}
           />
@@ -118,6 +119,7 @@ export default function ReturnRateCalculator() {
             label={`현재가 (${currencyLabel})`}
             value={currentPrice}
             onChange={setCurrentPrice}
+            onFirstInteraction={trackInputStart}
             placeholder="55000"
             helpText={`현재 평가 기준 가격입니다. 예: ${moneyExample}`}
           />
@@ -125,6 +127,7 @@ export default function ReturnRateCalculator() {
             label="보유 수량"
             value={qty}
             onChange={setQty}
+            onFirstInteraction={trackInputStart}
             placeholder="20"
             step="1"
             helpText="현재 보유한 주식 수량"
@@ -132,20 +135,42 @@ export default function ReturnRateCalculator() {
         </div>
 
         <div className="mt-5 rounded-2xl border border-slate-200 bg-slate-50/80 p-4">
-          <p className="text-sm font-semibold text-slate-900">실손익 옵션</p>
-          <p className="mt-1 text-xs leading-5 text-slate-500">
-            수수료와 거래세를 반영해 명목 수익과 실제 수익 차이를 함께 확인합니다.
-          </p>
-          <div className="mt-4">
-            <TradingCostFields
-              brokerFeePercent={brokerFeePercent}
-              transactionTaxPercent={transactionTaxPercent}
-              extraCost={extraCost}
-              onBrokerFeePercentChange={setBrokerFeePercent}
-              onTransactionTaxPercentChange={setTransactionTaxPercent}
-              onExtraCostChange={setExtraCost}
-            />
+          <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+            <div>
+              <p className="text-sm font-semibold text-slate-900">고급 옵션</p>
+              <p className="mt-1 text-xs leading-5 text-slate-500">
+                수수료와 거래세는 필요할 때만 열어 실손익까지 계산할 수 있습니다.
+              </p>
+            </div>
+            <button
+              type="button"
+              onClick={() => setShowAdvancedOptions((value) => !value)}
+              className="rounded-full border border-slate-300 bg-white px-4 py-2 text-xs font-semibold text-slate-700 transition hover:border-slate-400 hover:bg-slate-100"
+            >
+              {showAdvancedOptions ? '고급 옵션 닫기' : '고급 옵션 열기'}
+            </button>
           </div>
+          {showAdvancedOptions ? (
+            <div className="mt-4">
+              <TradingCostFields
+                brokerFeePercent={brokerFeePercent}
+                transactionTaxPercent={transactionTaxPercent}
+                extraCost={extraCost}
+                onBrokerFeePercentChange={(value) => {
+                  trackInputStart()
+                  setBrokerFeePercent(value)
+                }}
+                onTransactionTaxPercentChange={(value) => {
+                  trackInputStart()
+                  setTransactionTaxPercent(value)
+                }}
+                onExtraCostChange={(value) => {
+                  trackInputStart()
+                  setExtraCost(value)
+                }}
+              />
+            </div>
+          ) : null}
         </div>
 
         <div className="mt-6 space-y-4">

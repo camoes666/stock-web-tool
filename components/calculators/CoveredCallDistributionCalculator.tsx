@@ -1,7 +1,7 @@
 'use client'
 
-import { useEffect, useMemo, useState } from 'react'
-import { trackCalculatorRun, trackCalculatorView } from '@/lib/analytics'
+import { useMemo, useState } from 'react'
+import { trackCalculatorRun } from '@/lib/analytics'
 import {
   calcCoveredCallSummaryInsight,
   calcCoveredCallTotalReturnScenarios
@@ -19,6 +19,7 @@ import {
   EmptyResult,
   formatCurrency
 } from '@/components/calculators/shared'
+import { useCalculatorTracking } from '@/components/calculators/useCalculatorTracking'
 
 const accountLabels: Record<AccountType, string> = {
   general: '일반계좌',
@@ -132,13 +133,11 @@ export default function CoveredCallDistributionCalculator({
   )
   const [error, setError] = useState('')
   const [results, setResults] = useState<CoveredCallDistributionComparisonResult[] | null>(null)
-
-  useEffect(() => {
-    trackCalculatorView({
-      calculator_name: 'covered-call-distribution',
-      calculator_category: 'stock'
-    })
-  }, [])
+  const { trackInputStart } = useCalculatorTracking({
+    calculatorName: 'covered-call-distribution',
+    calculatorCategory: 'stock',
+    hasResult: results !== null
+  })
 
   const selectedEtf = useMemo(
     () => etfOptions.find((option) => option.symbol === selectedSymbol) ?? defaultOption,
@@ -150,6 +149,7 @@ export default function CoveredCallDistributionCalculator({
   )
 
   function applyExample(amount: number) {
+    trackInputStart()
     if (selectedEtf) {
       setPricePerShare(String(selectedEtf.priceReference))
       setMonthlyDistributionPerShare(String(selectedEtf.monthlyDistributionPerShare))
@@ -160,6 +160,7 @@ export default function CoveredCallDistributionCalculator({
   }
 
   function handleEtfChange(value: string) {
+    trackInputStart()
     setSelectedSymbol(value)
     const nextOption = etfOptions.find((option) => option.symbol === value)
 
@@ -277,6 +278,7 @@ export default function CoveredCallDistributionCalculator({
                 label="투자 금액 (원)"
                 value={investmentAmount}
                 onChange={setInvestmentAmount}
+                onFirstInteraction={trackInputStart}
                 placeholder="10000000"
                 helpText="해당 ETF에 투자할 총 금액입니다."
               />
@@ -284,6 +286,7 @@ export default function CoveredCallDistributionCalculator({
                 label="기준 가격 (원)"
                 value={pricePerShare}
                 onChange={setPricePerShare}
+                onFirstInteraction={trackInputStart}
                 placeholder="10000"
                 helpText="현재 참고 가격 또는 계산 기준 가격입니다."
               />
@@ -291,6 +294,7 @@ export default function CoveredCallDistributionCalculator({
                 label="주당 월분배금 (원)"
                 value={monthlyDistributionPerShare}
                 onChange={setMonthlyDistributionPerShare}
+                onFirstInteraction={trackInputStart}
                 placeholder="120"
                 helpText="최근 공시 기준 또는 가정한 월분배금입니다."
               />

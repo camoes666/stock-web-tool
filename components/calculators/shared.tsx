@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useId, useState, type ReactNode } from 'react'
+import { useEffect, useId, useRef, useState, type ReactNode } from 'react'
 
 export type CurrencyCode = 'KRW' | 'USD'
 
@@ -134,6 +134,7 @@ export function CalculatorField({
   label,
   value,
   onChange,
+  onFirstInteraction,
   placeholder,
   step = 'any',
   helpText
@@ -141,11 +142,13 @@ export function CalculatorField({
   label: string
   value: string
   onChange: (value: string) => void
+  onFirstInteraction?: () => void
   placeholder: string
   step?: string
   helpText?: string
 }) {
   const inputId = useId()
+  const hasInteractedRef = useRef(false)
 
   return (
     <label htmlFor={inputId} className="block">
@@ -157,7 +160,14 @@ export function CalculatorField({
         inputMode="decimal"
         step={step}
         value={value}
-        onChange={(event) => onChange(event.target.value)}
+        onChange={(event) => {
+          if (!hasInteractedRef.current) {
+            hasInteractedRef.current = true
+            onFirstInteraction?.()
+          }
+
+          onChange(event.target.value)
+        }}
         placeholder={placeholder}
         className="w-full rounded-2xl border border-slate-300 bg-slate-50/70 px-4 py-3 text-sm text-slate-900 outline-none transition focus:border-brand-500 focus:bg-white focus:ring-4 focus:ring-brand-100"
       />

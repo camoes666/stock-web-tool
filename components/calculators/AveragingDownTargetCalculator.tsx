@@ -1,7 +1,7 @@
 'use client'
 
-import { useEffect, useState } from 'react'
-import { trackCalculatorRun, trackCalculatorView } from '@/lib/analytics'
+import { useState } from 'react'
+import { trackCalculatorRun } from '@/lib/analytics'
 import { calcAveragingDownTarget, type AveragingDownTargetInput } from '@/lib/calculations'
 import {
   CalculatorActionButton,
@@ -17,6 +17,7 @@ import {
   getCurrencyLabel,
   useStoredCurrency
 } from '@/components/calculators/shared'
+import { useCalculatorTracking } from '@/components/calculators/useCalculatorTracking'
 
 export default function AveragingDownTargetCalculator() {
   const [currency, setCurrency] = useStoredCurrency()
@@ -29,13 +30,11 @@ export default function AveragingDownTargetCalculator() {
   const [extraCost, setExtraCost] = useState('0')
   const [error, setError] = useState('')
   const [result, setResult] = useState<ReturnType<typeof calcAveragingDownTarget> | null>(null)
-
-  useEffect(() => {
-    trackCalculatorView({
-      calculator_name: 'averaging-down-target',
-      calculator_category: 'stock'
-    })
-  }, [])
+  const { trackInputStart } = useCalculatorTracking({
+    calculatorName: 'averaging-down-target',
+    calculatorCategory: 'stock',
+    hasResult: result !== null
+  })
 
   function handleCalc() {
     const input: AveragingDownTargetInput = {
@@ -125,6 +124,7 @@ export default function AveragingDownTargetCalculator() {
             label={`현재 평균단가 (${currencyLabel})`}
             value={avgPrice}
             onChange={setAvgPrice}
+            onFirstInteraction={trackInputStart}
             placeholder="50000"
             helpText={`현재 평균 매입 단가입니다. 예: ${moneyExample}`}
           />
@@ -132,6 +132,7 @@ export default function AveragingDownTargetCalculator() {
             label="보유 수량"
             value={qty}
             onChange={setQty}
+            onFirstInteraction={trackInputStart}
             placeholder="100"
             step="1"
             helpText="현재 보유 중인 주식 수량"
@@ -140,6 +141,7 @@ export default function AveragingDownTargetCalculator() {
             label={`현재가 (${currencyLabel})`}
             value={currentPrice}
             onChange={setCurrentPrice}
+            onFirstInteraction={trackInputStart}
             placeholder="40000"
             helpText={`추가 매수 기준 가격입니다. 예: ${moneyExample}`}
           />
@@ -147,6 +149,7 @@ export default function AveragingDownTargetCalculator() {
             label={`목표 평균단가 (${currencyLabel})`}
             value={targetAvgPrice}
             onChange={setTargetAvgPrice}
+            onFirstInteraction={trackInputStart}
             placeholder="45000"
             helpText={`낮추고 싶은 목표 평균단가입니다. 예: ${moneyExample}`}
           />
@@ -162,9 +165,18 @@ export default function AveragingDownTargetCalculator() {
               brokerFeePercent={brokerFeePercent}
               transactionTaxPercent={transactionTaxPercent}
               extraCost={extraCost}
-              onBrokerFeePercentChange={setBrokerFeePercent}
-              onTransactionTaxPercentChange={setTransactionTaxPercent}
-              onExtraCostChange={setExtraCost}
+              onBrokerFeePercentChange={(value) => {
+                trackInputStart()
+                setBrokerFeePercent(value)
+              }}
+              onTransactionTaxPercentChange={(value) => {
+                trackInputStart()
+                setTransactionTaxPercent(value)
+              }}
+              onExtraCostChange={(value) => {
+                trackInputStart()
+                setExtraCost(value)
+              }}
             />
           </div>
         </div>

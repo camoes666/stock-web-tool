@@ -1,7 +1,7 @@
 'use client'
 
-import { useEffect, useState } from 'react'
-import { trackCalculatorRun, trackCalculatorView } from '@/lib/analytics'
+import { useState } from 'react'
+import { trackCalculatorRun } from '@/lib/analytics'
 import { calcFairValue, type FairValueInput } from '@/lib/calculations'
 import {
   CalculatorActionButton,
@@ -16,6 +16,7 @@ import {
   getCurrencyLabel,
   useStoredCurrency
 } from '@/components/calculators/shared'
+import { useCalculatorTracking } from '@/components/calculators/useCalculatorTracking'
 
 export default function FairValueCalculator() {
   const [currency, setCurrency] = useStoredCurrency()
@@ -25,13 +26,11 @@ export default function FairValueCalculator() {
   const [targetPbr, setTargetPbr] = useState('')
   const [error, setError] = useState('')
   const [result, setResult] = useState<ReturnType<typeof calcFairValue> | null>(null)
-
-  useEffect(() => {
-    trackCalculatorView({
-      calculator_name: 'fair-value',
-      calculator_category: 'stock'
-    })
-  }, [])
+  const { trackInputStart } = useCalculatorTracking({
+    calculatorName: 'fair-value',
+    calculatorCategory: 'stock',
+    hasResult: result !== null
+  })
 
   function handleCalc() {
     const input: FairValueInput = {
@@ -81,10 +80,10 @@ export default function FairValueCalculator() {
         </div>
 
         <div className="grid gap-4 sm:grid-cols-2">
-          <CalculatorField label={`EPS (${currencyLabel})`} value={eps} onChange={setEps} placeholder="5000" helpText={`주당순이익 · ${moneyExample}`} />
-          <CalculatorField label="목표 PER" value={targetPer} onChange={setTargetPer} placeholder="15" helpText="적용하고 싶은 PER 배수" />
-          <CalculatorField label={`BPS (${currencyLabel})`} value={bps} onChange={setBps} placeholder="30000" helpText={`주당순자산가치 · ${moneyExample}`} />
-          <CalculatorField label="목표 PBR" value={targetPbr} onChange={setTargetPbr} placeholder="1.5" helpText="적용하고 싶은 PBR 배수" />
+          <CalculatorField label={`EPS (${currencyLabel})`} value={eps} onChange={setEps} onFirstInteraction={trackInputStart} placeholder="5000" helpText={`주당순이익 · ${moneyExample}`} />
+          <CalculatorField label="목표 PER" value={targetPer} onChange={setTargetPer} onFirstInteraction={trackInputStart} placeholder="15" helpText="적용하고 싶은 PER 배수" />
+          <CalculatorField label={`BPS (${currencyLabel})`} value={bps} onChange={setBps} onFirstInteraction={trackInputStart} placeholder="30000" helpText={`주당순자산가치 · ${moneyExample}`} />
+          <CalculatorField label="목표 PBR" value={targetPbr} onChange={setTargetPbr} onFirstInteraction={trackInputStart} placeholder="1.5" helpText="적용하고 싶은 PBR 배수" />
         </div>
 
         <div className="mt-6 space-y-4">

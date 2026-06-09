@@ -1,5 +1,7 @@
 import {
   track404View,
+  trackCalculatorInputStart,
+  trackCalculatorResultView,
   trackCalculatorRun,
   trackCalculatorView,
   trackCtaClick
@@ -52,6 +54,36 @@ describe('analytics helpers', () => {
         input_count: 4,
         fee_enabled: true,
         tax_enabled: true
+      })
+    ])
+  })
+
+  it('pushes calculator input start events', () => {
+    trackCalculatorInputStart({
+      calculator_name: 'multa',
+      calculator_category: 'stock'
+    })
+
+    expect(window.dataLayer).toEqual([
+      expect.objectContaining({
+        event: 'calculator_input_start',
+        calculator_name: 'multa',
+        calculator_category: 'stock'
+      })
+    ])
+  })
+
+  it('pushes calculator result view events', () => {
+    trackCalculatorResultView({
+      calculator_name: 'multa',
+      calculator_category: 'stock'
+    })
+
+    expect(window.dataLayer).toEqual([
+      expect.objectContaining({
+        event: 'calculator_result_view',
+        calculator_name: 'multa',
+        calculator_category: 'stock'
       })
     ])
   })

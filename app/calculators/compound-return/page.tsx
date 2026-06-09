@@ -7,7 +7,7 @@ import { getGuidesForTool } from '@/lib/guides'
 export const metadata: Metadata = {
   title: '복리 계산기 - 장기 적립식 투자 시뮬레이션',
   description:
-    '초기 투자금과 월 적립금, 기대 수익률, 투자 기간을 입력하면 장기 복리 성장 결과를 계산할 수 있습니다. 적립식 투자 시나리오를 점검할 때 유용합니다.'
+    '초기 투자금과 월 적립금, 기대 수익률, 투자 기간을 입력하면 미래 자산과 예상 이익을 계산할 수 있습니다. 적립식 투자 시나리오를 빠르게 점검할 때 유용합니다.'
 }
 
 const explainer = (
@@ -29,7 +29,7 @@ export default function CompoundReturnPage() {
       <JsonLd name="복리 계산기" description="장기 적립식 투자와 복리 성장을 계산하는 도구" path="/calculators/compound-return" />
       <CalculatorLayout
         title="복리 계산기"
-        description="초기 투자금과 월 적립금을 바탕으로 장기 복리 성장 결과를 시뮬레이션합니다."
+        description="초기 투자금과 월 적립금, 기대 수익률을 바탕으로 미래 자산과 예상 이익을 시뮬레이션합니다."
         currentSlug="compound-return"
         explainerContent={explainer}
         relatedGuides={getGuidesForTool('compound-return')}

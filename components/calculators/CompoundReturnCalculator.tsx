@@ -1,7 +1,7 @@
 'use client'
 
-import { useEffect, useState } from 'react'
-import { trackCalculatorRun, trackCalculatorView } from '@/lib/analytics'
+import { useState } from 'react'
+import { trackCalculatorRun } from '@/lib/analytics'
 import { calcCompoundReturn, type CompoundReturnInput } from '@/lib/calculations'
 import {
   CalculatorActionButton,
@@ -16,6 +16,24 @@ import {
   getCurrencyLabel,
   useStoredCurrency
 } from '@/components/calculators/shared'
+import { useCalculatorTracking } from '@/components/calculators/useCalculatorTracking'
+
+const exampleScenarios = [
+  {
+    label: '월 50만원 10년',
+    principal: '0',
+    monthlyContribution: '500000',
+    annualRate: '8',
+    years: '10'
+  },
+  {
+    label: '월 100만원 20년',
+    principal: '0',
+    monthlyContribution: '1000000',
+    annualRate: '8',
+    years: '20'
+  }
+] as const
 
 export default function CompoundReturnCalculator() {
   const [currency, setCurrency] = useStoredCurrency()
@@ -25,13 +43,20 @@ export default function CompoundReturnCalculator() {
   const [years, setYears] = useState('')
   const [error, setError] = useState('')
   const [result, setResult] = useState<ReturnType<typeof calcCompoundReturn> | null>(null)
+  const { trackInputStart } = useCalculatorTracking({
+    calculatorName: 'compound-return',
+    calculatorCategory: 'stock',
+    hasResult: result !== null
+  })
 
-  useEffect(() => {
-    trackCalculatorView({
-      calculator_name: 'compound-return',
-      calculator_category: 'stock'
-    })
-  }, [])
+  function applyExample(example: (typeof exampleScenarios)[number]) {
+    trackInputStart()
+    setPrincipal(example.principal)
+    setMonthlyContribution(example.monthlyContribution)
+    setAnnualRate(example.annualRate)
+    setYears(example.years)
+    setError('')
+  }
 
   function handleCalc() {
     const input: CompoundReturnInput = {
@@ -70,7 +95,7 @@ export default function CompoundReturnCalculator() {
       <CalculatorSection
         eyebrow="Input"
         title="장기 적립 조건을 입력하세요"
-        description="초기 투자금, 월 적립금, 기대 수익률을 입력해 복리 성장 경로를 시뮬레이션합니다."
+        description="초기 투자금, 월 적립금, 기대 수익률, 투자 기간을 넣으면 미래 자산과 예상 이익을 바로 계산할 수 있습니다."
       >
         <div className="mb-5 flex items-center justify-between gap-4">
           <div>
@@ -80,11 +105,34 @@ export default function CompoundReturnCalculator() {
           <CurrencySelector value={currency} onChange={setCurrency} />
         </div>
 
+        <div className="mb-5 rounded-2xl border border-brand-100 bg-brand-50/80 p-4">
+          <div className="flex flex-col gap-3 lg:flex-row lg:items-end lg:justify-between">
+            <div>
+              <p className="text-sm font-semibold text-slate-950">빠른 예시 입력</p>
+              <p className="mt-1 text-xs leading-5 text-slate-600">
+                처음이면 대표 적립 시나리오로 먼저 계산한 뒤, 월 적립금과 기간을 바꿔보는 흐름이 가장 이해하기 쉽습니다.
+              </p>
+            </div>
+            <div className="flex flex-wrap gap-2">
+              {exampleScenarios.map((example) => (
+                <button
+                  key={example.label}
+                  type="button"
+                  onClick={() => applyExample(example)}
+                  className="rounded-full border border-brand-200 bg-white px-4 py-2 text-xs font-semibold text-brand-700 transition hover:border-brand-300 hover:bg-brand-50"
+                >
+                  {example.label}
+                </button>
+              ))}
+            </div>
+          </div>
+        </div>
+
         <div className="grid gap-4 sm:grid-cols-2">
-          <CalculatorField label={`초기 투자금 (${currencyLabel})`} value={principal} onChange={setPrincipal} placeholder="10000000" helpText={`시작 시점의 투자 원금 · ${moneyExample}`} />
-          <CalculatorField label={`월 적립금 (${currencyLabel})`} value={monthlyContribution} onChange={setMonthlyContribution} placeholder="500000" helpText={`매달 추가로 투자할 금액 · ${moneyExample}`} />
-          <CalculatorField label="연 수익률" value={annualRate} onChange={setAnnualRate} placeholder="8" helpText="연간 기대 수익률(%)" />
-          <CalculatorField label="투자 기간" value={years} onChange={setYears} placeholder="10" helpText="장기 투자 기간(년)" />
+          <CalculatorField label={`초기 투자금 (${currencyLabel})`} value={principal} onChange={setPrincipal} onFirstInteraction={trackInputStart} placeholder="10000000" helpText={`시작 시점의 투자 원금 · ${moneyExample}`} />
+          <CalculatorField label={`월 적립금 (${currencyLabel})`} value={monthlyContribution} onChange={setMonthlyContribution} onFirstInteraction={trackInputStart} placeholder="500000" helpText={`매달 추가로 투자할 금액 · ${moneyExample}`} />
+          <CalculatorField label="연 수익률" value={annualRate} onChange={setAnnualRate} onFirstInteraction={trackInputStart} placeholder="8" helpText="연간 기대 수익률(%)" />
+          <CalculatorField label="투자 기간" value={years} onChange={setYears} onFirstInteraction={trackInputStart} placeholder="10" helpText="장기 투자 기간(년)" />
         </div>
 
         <div className="mt-6 space-y-4">
@@ -96,7 +144,7 @@ export default function CompoundReturnCalculator() {
       <CalculatorSection
         eyebrow="Result"
         title="적립식 복리 성장 결과"
-        description="만기 자산과 총 납입금, 예상 이익을 분리해서 보여줘 장기 시나리오를 쉽게 비교할 수 있습니다."
+        description="최종 자산과 총 납입금, 예상 이익을 나눠 보여줘 장기 적립 시나리오를 더 쉽게 비교할 수 있습니다."
       >
         {result ? (
           <div className="grid gap-4 sm:grid-cols-3">

@@ -7,7 +7,7 @@ import { getGuidesForTool } from '@/lib/guides'
 export const metadata: Metadata = {
   title: '해외주식 양도세 계산기 - 미국주식 세금과 세후 차익 계산',
   description:
-    '미국주식 등 해외주식 매수·매도 금액, 환율, 필요경비, 기본공제를 입력해 원화 기준 양도차익과 예상 양도세, 세후 차익을 계산합니다.'
+    '미국주식 등 해외주식의 매수·매도 금액과 환율, 필요경비, 기본공제를 입력해 원화 기준 양도차익과 예상 양도세, 세후 차익을 계산합니다.'
 }
 
 const explainer = (
@@ -41,7 +41,7 @@ export default function OverseasCapitalGainsPage() {
       />
       <CalculatorLayout
         title="해외주식 양도세 계산기"
-        description="미국주식 등 해외주식 매도 후 환율과 필요경비, 기본공제를 반영해 원화 기준 양도차익과 예상 세액, 세후 차익을 단계별로 계산합니다."
+        description="미국주식 등 해외주식의 매수·매도 금액과 환율을 바탕으로 원화 기준 양도차익과 예상 세액, 세후 차익을 단계별로 계산합니다."
         currentSlug="overseas-capital-gains"
         explainerContent={explainer}
         relatedGuides={getGuidesForTool('overseas-capital-gains')}

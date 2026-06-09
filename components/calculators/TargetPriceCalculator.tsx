@@ -1,7 +1,7 @@
 'use client'
 
-import { useEffect, useState } from 'react'
-import { trackCalculatorRun, trackCalculatorView } from '@/lib/analytics'
+import { useState } from 'react'
+import { trackCalculatorRun } from '@/lib/analytics'
 import { calcTargetPrice, type TargetPriceInput } from '@/lib/calculations'
 import {
   CalculatorActionButton,
@@ -16,6 +16,7 @@ import {
   getCurrencyLabel,
   useStoredCurrency
 } from '@/components/calculators/shared'
+import { useCalculatorTracking } from '@/components/calculators/useCalculatorTracking'
 
 export default function TargetPriceCalculator() {
   const [currency, setCurrency] = useStoredCurrency()
@@ -24,13 +25,11 @@ export default function TargetPriceCalculator() {
   const [lossPercent, setLossPercent] = useState('')
   const [error, setError] = useState('')
   const [result, setResult] = useState<ReturnType<typeof calcTargetPrice> | null>(null)
-
-  useEffect(() => {
-    trackCalculatorView({
-      calculator_name: 'target-price',
-      calculator_category: 'stock'
-    })
-  }, [])
+  const { trackInputStart } = useCalculatorTracking({
+    calculatorName: 'target-price',
+    calculatorCategory: 'stock',
+    hasResult: result !== null
+  })
 
   function handleCalc() {
     const input: TargetPriceInput = {
@@ -85,9 +84,9 @@ export default function TargetPriceCalculator() {
         </div>
 
         <div className="grid gap-4 sm:grid-cols-3">
-          <CalculatorField label={`진입가 (${currencyLabel})`} value={entryPrice} onChange={setEntryPrice} placeholder="50000" helpText={`포지션에 진입한 가격 · ${moneyExample}`} />
-          <CalculatorField label="목표 수익률" value={profitPercent} onChange={setProfitPercent} placeholder="12" helpText="도달하고 싶은 수익률(%)" />
-          <CalculatorField label="손절 비율" value={lossPercent} onChange={setLossPercent} placeholder="7" helpText="허용할 손실 비율(%)" />
+          <CalculatorField label={`진입가 (${currencyLabel})`} value={entryPrice} onChange={setEntryPrice} onFirstInteraction={trackInputStart} placeholder="50000" helpText={`포지션에 진입한 가격 · ${moneyExample}`} />
+          <CalculatorField label="목표 수익률" value={profitPercent} onChange={setProfitPercent} onFirstInteraction={trackInputStart} placeholder="12" helpText="도달하고 싶은 수익률(%)" />
+          <CalculatorField label="손절 비율" value={lossPercent} onChange={setLossPercent} onFirstInteraction={trackInputStart} placeholder="7" helpText="허용할 손실 비율(%)" />
         </div>
 
         <div className="mt-6 space-y-4">

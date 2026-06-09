@@ -7,7 +7,7 @@ import { getGuidesForTool } from '@/lib/guides'
 export const metadata: Metadata = {
   title: '배당 계산기 - 배당수익률, 월배당, 예상 배당금 계산',
   description:
-    '주가, 보유수량, 주당 배당금을 입력하면 배당수익률과 예상 배당금, 월배당 기준 현금흐름을 바로 계산할 수 있습니다.'
+    '주가, 보유 수량, 주당 배당금을 입력하면 배당수익률과 연간 예상 배당금, 월 환산 현금흐름을 바로 계산할 수 있습니다.'
 }
 
 const explainer = (
@@ -29,7 +29,7 @@ export default function DividendPage() {
       <JsonLd name="배당 계산기" description="배당수익률과 예상 배당금을 계산하는 주식 도구" path="/calculators/dividend" />
       <CalculatorLayout
         title="배당 계산기"
-        description="배당수익률과 예상 배당금, 월배당 기준 현금흐름을 빠르게 계산합니다."
+        description="주가와 배당금, 보유 수량만 넣으면 배당수익률과 연간 예상 배당금을 빠르게 계산할 수 있습니다."
         currentSlug="dividend"
         explainerContent={explainer}
         relatedGuides={getGuidesForTool('dividend')}

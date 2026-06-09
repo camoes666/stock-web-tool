@@ -7,7 +7,7 @@ import { getGuidesForTool } from '@/lib/guides'
 export const metadata: Metadata = {
   title: '수익률 계산기 - 주식 수익 계산, 수수료·세금 포함 실손익',
   description:
-    '매수가, 현재가, 보유 수량을 입력하면 주식 수익 계산, 수익률, 수수료와 세금 반영 실손익까지 확인할 수 있습니다.'
+    '매수가, 현재가, 보유 수량만 입력하면 기본 수익률을 계산하고, 필요하면 수수료와 세금을 열어 실손익까지 확인할 수 있습니다.'
 }
 
 const explainer = (
@@ -41,7 +41,7 @@ export default function ReturnRatePage() {
       />
       <CalculatorLayout
         title="수익률 계산기"
-        description="주식 수익 계산과 수익률, 수수료·세금 반영 실손익까지 빠르게 확인할 수 있습니다."
+        description="매수가, 현재가, 보유 수량만 먼저 입력하고 필요할 때만 고급 옵션으로 실손익까지 확인할 수 있습니다."
         currentSlug="return-rate"
         explainerContent={explainer}
         relatedGuides={getGuidesForTool('return-rate')}

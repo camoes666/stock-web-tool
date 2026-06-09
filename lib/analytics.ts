@@ -59,6 +59,24 @@ export function trackCalculatorRun(
   })
 }
 
+export function trackCalculatorInputStart(
+  event: Pick<DataLayerEvent, 'calculator_name' | 'calculator_category'>
+) {
+  pushEvent({
+    event: 'calculator_input_start',
+    ...event
+  })
+}
+
+export function trackCalculatorResultView(
+  event: Pick<DataLayerEvent, 'calculator_name' | 'calculator_category'>
+) {
+  pushEvent({
+    event: 'calculator_result_view',
+    ...event
+  })
+}
+
 export function trackCalculatorResultCopy(
   event: Pick<DataLayerEvent, 'calculator_name' | 'calculator_category' | 'copy_type'>
 ) {

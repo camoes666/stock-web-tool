@@ -1,7 +1,7 @@
 'use client'
 
-import { useEffect, useState } from 'react'
-import { trackCalculatorRun, trackCalculatorView } from '@/lib/analytics'
+import { useState } from 'react'
+import { trackCalculatorRun } from '@/lib/analytics'
 import { calcDividendReinvest, type DividendReinvestInput } from '@/lib/calculations'
 import {
   CalculatorActionButton,
@@ -16,6 +16,7 @@ import {
   getCurrencyLabel,
   useStoredCurrency
 } from '@/components/calculators/shared'
+import { useCalculatorTracking } from '@/components/calculators/useCalculatorTracking'
 
 export default function DividendReinvestCalculator() {
   const [currency, setCurrency] = useStoredCurrency()
@@ -25,13 +26,11 @@ export default function DividendReinvestCalculator() {
   const [years, setYears] = useState('')
   const [error, setError] = useState('')
   const [result, setResult] = useState<ReturnType<typeof calcDividendReinvest> | null>(null)
-
-  useEffect(() => {
-    trackCalculatorView({
-      calculator_name: 'dividend-reinvest',
-      calculator_category: 'stock'
-    })
-  }, [])
+  const { trackInputStart } = useCalculatorTracking({
+    calculatorName: 'dividend-reinvest',
+    calculatorCategory: 'stock',
+    hasResult: result !== null
+  })
 
   function handleCalc() {
     const input: DividendReinvestInput = {
@@ -87,10 +86,10 @@ export default function DividendReinvestCalculator() {
         </div>
 
         <div className="grid gap-4 sm:grid-cols-2">
-          <CalculatorField label={`현재 주가 (${currencyLabel})`} value={stockPrice} onChange={setStockPrice} placeholder="50000" helpText={`재투자 시 사용할 기준 가격 · ${moneyExample}`} />
-          <CalculatorField label={`주당 배당금 (${currencyLabel})`} value={dividendPerShare} onChange={setDividendPerShare} placeholder="2000" helpText={`1주당 연간 배당금 · ${moneyExample}`} />
-          <CalculatorField label="보유 수량" value={qty} onChange={setQty} placeholder="100" step="1" helpText="현재 보유한 주식 수량" />
-          <CalculatorField label="투자 기간" value={years} onChange={setYears} placeholder="3" step="1" helpText="재투자를 이어갈 기간(년)" />
+          <CalculatorField label={`현재 주가 (${currencyLabel})`} value={stockPrice} onChange={setStockPrice} onFirstInteraction={trackInputStart} placeholder="50000" helpText={`재투자 시 사용할 기준 가격 · ${moneyExample}`} />
+          <CalculatorField label={`주당 배당금 (${currencyLabel})`} value={dividendPerShare} onChange={setDividendPerShare} onFirstInteraction={trackInputStart} placeholder="2000" helpText={`1주당 연간 배당금 · ${moneyExample}`} />
+          <CalculatorField label="보유 수량" value={qty} onChange={setQty} onFirstInteraction={trackInputStart} placeholder="100" step="1" helpText="현재 보유한 주식 수량" />
+          <CalculatorField label="투자 기간" value={years} onChange={setYears} onFirstInteraction={trackInputStart} placeholder="3" step="1" helpText="재투자를 이어갈 기간(년)" />
         </div>
 
         <div className="mt-6 space-y-4">

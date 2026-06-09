@@ -1,7 +1,7 @@
 'use client'
 
-import { useEffect, useState } from 'react'
-import { trackCalculatorRun, trackCalculatorView } from '@/lib/analytics'
+import { useState } from 'react'
+import { trackCalculatorRun } from '@/lib/analytics'
 import { calcMulta, type MultaInput } from '@/lib/calculations'
 import {
   CalculatorActionButton,
@@ -17,6 +17,7 @@ import {
   getCurrencyLabel,
   useStoredCurrency
 } from '@/components/calculators/shared'
+import { useCalculatorTracking } from '@/components/calculators/useCalculatorTracking'
 
 export default function MultaCalculator() {
   const [currency, setCurrency] = useStoredCurrency()
@@ -29,13 +30,11 @@ export default function MultaCalculator() {
   const [extraCost, setExtraCost] = useState('0')
   const [error, setError] = useState('')
   const [result, setResult] = useState<ReturnType<typeof calcMulta> | null>(null)
-
-  useEffect(() => {
-    trackCalculatorView({
-      calculator_name: 'multa',
-      calculator_category: 'stock'
-    })
-  }, [])
+  const { trackInputStart } = useCalculatorTracking({
+    calculatorName: 'multa',
+    calculatorCategory: 'stock',
+    hasResult: result !== null
+  })
 
   function handleCalc() {
     const input: MultaInput = {
@@ -113,6 +112,7 @@ export default function MultaCalculator() {
             label={`현재 평균단가 (${currencyLabel})`}
             value={avgPrice}
             onChange={setAvgPrice}
+            onFirstInteraction={trackInputStart}
             placeholder="50000"
             helpText={`현재 보유 주식의 평균 매입 단가입니다. 예: ${moneyExample}`}
           />
@@ -120,6 +120,7 @@ export default function MultaCalculator() {
             label="보유 수량"
             value={qty}
             onChange={setQty}
+            onFirstInteraction={trackInputStart}
             placeholder="100"
             step="1"
             helpText="현재 보유하고 있는 주식 수량"
@@ -128,6 +129,7 @@ export default function MultaCalculator() {
             label={`추가 매수가 (${currencyLabel})`}
             value={addPrice}
             onChange={setAddPrice}
+            onFirstInteraction={trackInputStart}
             placeholder="40000"
             helpText={`추가 매수할 가격입니다. 예: ${moneyExample}`}
           />
@@ -135,6 +137,7 @@ export default function MultaCalculator() {
             label="추가 수량"
             value={addQty}
             onChange={setAddQty}
+            onFirstInteraction={trackInputStart}
             placeholder="50"
             step="1"
             helpText="추가로 매수할 주식 수량"
@@ -151,9 +154,18 @@ export default function MultaCalculator() {
               brokerFeePercent={brokerFeePercent}
               transactionTaxPercent={transactionTaxPercent}
               extraCost={extraCost}
-              onBrokerFeePercentChange={setBrokerFeePercent}
-              onTransactionTaxPercentChange={setTransactionTaxPercent}
-              onExtraCostChange={setExtraCost}
+              onBrokerFeePercentChange={(value) => {
+                trackInputStart()
+                setBrokerFeePercent(value)
+              }}
+              onTransactionTaxPercentChange={(value) => {
+                trackInputStart()
+                setTransactionTaxPercent(value)
+              }}
+              onExtraCostChange={(value) => {
+                trackInputStart()
+                setExtraCost(value)
+              }}
             />
           </div>
         </div>
