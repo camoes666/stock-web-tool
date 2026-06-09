@@ -102,7 +102,7 @@ export default function DividendCalculator() {
             <button
               type="button"
               onClick={applyExample}
-              className="rounded-full border border-brand-200 bg-white px-4 py-2 text-xs font-semibold text-brand-700 transition hover:border-brand-300 hover:bg-brand-50"
+              className="inline-flex min-w-fit shrink-0 items-center justify-center whitespace-nowrap rounded-full border border-brand-200 bg-white px-5 py-2 text-xs font-semibold leading-none text-brand-700 transition hover:border-brand-300 hover:bg-brand-50"
             >
               예시값 채우기
             </button>
