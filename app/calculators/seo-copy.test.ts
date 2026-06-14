@@ -1,6 +1,7 @@
 import { metadata as averagingDownTargetMetadata } from '@/app/calculators/averaging-down-target/page'
 import { metadata as dividendMetadata } from '@/app/calculators/dividend/page'
 import { metadata as multaMetadata } from '@/app/calculators/multa/page'
+import { metadata as overseasCapitalGainsMetadata } from '@/app/calculators/overseas-capital-gains/page'
 import { metadata as returnRateMetadata } from '@/app/calculators/return-rate/page'
 
 describe('calculator SEO copy', () => {
@@ -8,7 +9,7 @@ describe('calculator SEO copy', () => {
     expect(dividendMetadata).toMatchObject({
       title: '배당 계산기 - 배당수익률, 월배당, 예상 배당금 계산',
       description:
-        '주가, 보유수량, 주당 배당금을 입력하면 배당수익률과 예상 배당금, 월배당 기준 현금흐름을 바로 계산할 수 있습니다.'
+        '주가, 보유 수량, 주당 배당금을 입력하면 배당수익률과 연간 예상 배당금, 월 환산 현금흐름을 바로 계산할 수 있습니다.'
     })
   })
 
@@ -32,7 +33,15 @@ describe('calculator SEO copy', () => {
     expect(returnRateMetadata).toMatchObject({
       title: '수익률 계산기 - 주식 수익 계산, 수수료·세금 포함 실손익',
       description:
-        '매수가, 현재가, 보유 수량을 입력하면 주식 수익 계산, 수익률, 수수료와 세금 반영 실손익까지 확인할 수 있습니다.'
+        '매수가, 현재가, 보유 수량만 입력하면 기본 수익률을 계산하고, 필요하면 수수료와 세금을 열어 실손익까지 확인할 수 있습니다.'
+    })
+  })
+
+  it('keeps the overseas capital gains calculator aligned with US stock tax intent keywords', () => {
+    expect(overseasCapitalGainsMetadata).toMatchObject({
+      title: '미국주식 양도세 계산기 | 해외주식 세금 계산, 기본공제 반영',
+      description:
+        '미국주식과 해외주식 매매 차익에 대한 예상 양도세를 계산해보세요. 기본공제, 필요경비, 세후 실수령 금액까지 한 번에 확인할 수 있습니다.'
     })
   })
 })

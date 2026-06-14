@@ -42,7 +42,7 @@ export default function OverseasCapitalGainsCalculator() {
     setSellAmount('15000')
     setBuyFxRate('1350')
     setSellFxRate('1380')
-    setDeductibleExpenses('0')
+    setDeductibleExpenses('50000')
     setBasicDeduction(DEFAULT_BASIC_DEDUCTION)
     setTaxRatePercent(DEFAULT_TAX_RATE)
     setError('')
@@ -105,13 +105,13 @@ export default function OverseasCapitalGainsCalculator() {
     <div className="grid gap-5">
       <CalculatorSection
         eyebrow="Input"
-        title="해외주식 양도세 계산값을 입력하세요"
-        description="미국주식 등 해외주식의 매수·매도 금액과 환율을 넣으면 원화 기준 양도차익과 예상 세금을 빠르게 계산할 수 있습니다."
+        title="미국주식 양도세 계산값을 입력하세요"
+        description="매수금액, 매도금액, 환율, 필요경비를 입력하면 예상 양도세와 세후 금액을 원화 기준으로 계산합니다."
       >
         <div className="mb-5 rounded-2xl border border-brand-100 bg-brand-50/80 p-4">
           <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
             <div>
-              <p className="text-sm font-semibold text-slate-950">빠른 예시 입력</p>
+              <p className="text-sm font-semibold text-slate-950">미국주식 예시 입력</p>
               <p className="mt-1 text-xs leading-5 text-slate-600">
                 처음이면 미국주식 예시값으로 먼저 계산해본 뒤, 금액과 환율을 바꿔보는 흐름이 가장 이해하기 쉽습니다.
               </p>
@@ -121,7 +121,7 @@ export default function OverseasCapitalGainsCalculator() {
               onClick={applyExample}
               className="inline-flex min-w-fit shrink-0 items-center justify-center whitespace-nowrap rounded-full border border-brand-200 bg-white px-5 py-2 text-xs font-semibold leading-none text-brand-700 transition hover:border-brand-300 hover:bg-brand-50"
             >
-              미국주식 예시
+              미국주식 예시 적용
             </button>
           </div>
         </div>
@@ -216,47 +216,59 @@ export default function OverseasCapitalGainsCalculator() {
       <CalculatorSection
         eyebrow="Result"
         title="원화 기준 예상 양도세"
-        description="매수·매도금 환산부터 과세표준과 세후 차익까지 한 단계씩 나눠 보여줍니다."
+        description="양도차익, 과세 대상 금액, 예상 세액, 세후 실수령 금액까지 한 단계씩 나눠 보여줍니다."
       >
         {result ? (
-          <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
-            <ResultCard
-              label="원화 매수금액"
-              value={formatCurrency(result.krwBuyAmount, 'KRW')}
-              tone="muted"
-              detail="매수금액을 원화로 환산한 값"
-            />
-            <ResultCard
-              label="원화 매도금액"
-              value={formatCurrency(result.krwSellAmount, 'KRW')}
-              tone="muted"
-              detail="매도금액을 원화로 환산한 값"
-            />
-            <ResultCard
-              label="양도차익"
-              value={formatCurrency(result.capitalGain, 'KRW')}
-              tone={result.capitalGain >= 0 ? 'positive' : 'negative'}
-              detail="필요경비까지 차감한 기본 차익"
-            />
-            <ResultCard
-              label="과세표준"
-              value={formatCurrency(result.taxableBase, 'KRW')}
-              tone="default"
-              detail="기본공제 반영 후 과세 대상 금액"
-            />
-            <ResultCard
-              label="예상 세액"
-              value={formatCurrency(result.estimatedTax, 'KRW')}
-              tone="negative"
-              detail="입력한 세율 기준 예상 양도세"
-            />
-            <ResultCard
-              label="세후 예상 차익"
-              value={formatCurrency(result.afterTaxGain, 'KRW')}
-              tone={result.afterTaxGain >= 0 ? 'positive' : 'negative'}
-              detail="세금을 차감한 뒤 남는 예상 차익"
-            />
-          </div>
+          <>
+            <div className="mb-4 rounded-2xl border border-brand-200 bg-brand-50/80 p-4">
+              <p className="text-sm font-semibold text-slate-950">
+                이번 거래 기준 예상 세액은 약 {formatCurrency(result.estimatedTax, 'KRW')}입니다.
+              </p>
+              <p className="mt-2 text-xs leading-5 text-slate-600">
+                기본공제를 반영한 과세 대상 금액은 {formatCurrency(result.taxableBase, 'KRW')}이고, 세금 반영 후 실제 남는 금액은 약{' '}
+                {formatCurrency(result.afterTaxGain, 'KRW')}입니다.
+              </p>
+            </div>
+
+            <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
+              <ResultCard
+                label="원화 매수금액"
+                value={formatCurrency(result.krwBuyAmount, 'KRW')}
+                tone="muted"
+                detail="매수금액을 원화로 환산한 값"
+              />
+              <ResultCard
+                label="원화 매도금액"
+                value={formatCurrency(result.krwSellAmount, 'KRW')}
+                tone="muted"
+                detail="매도금액을 원화로 환산한 값"
+              />
+              <ResultCard
+                label="양도차익"
+                value={formatCurrency(result.capitalGain, 'KRW')}
+                tone={result.capitalGain >= 0 ? 'positive' : 'negative'}
+                detail="필요경비까지 차감한 기본 차익"
+              />
+              <ResultCard
+                label="기본공제 반영 후 과세 대상 금액"
+                value={formatCurrency(result.taxableBase, 'KRW')}
+                tone="default"
+                detail="기본공제를 반영한 뒤 실제로 세금 계산에 들어가는 금액"
+              />
+              <ResultCard
+                label="예상 세액"
+                value={formatCurrency(result.estimatedTax, 'KRW')}
+                tone="negative"
+                detail="입력한 세율 기준 예상 양도세"
+              />
+              <ResultCard
+                label="세후 실수령 금액"
+                value={formatCurrency(result.afterTaxGain, 'KRW')}
+                tone={result.afterTaxGain >= 0 ? 'positive' : 'negative'}
+                detail="예상 세액을 반영하고 남는 금액"
+              />
+            </div>
+          </>
         ) : (
           <EmptyResult
             title="계산 결과가 아직 없습니다."
