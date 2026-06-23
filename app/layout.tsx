@@ -59,6 +59,7 @@ export default function RootLayout({
     <html lang="ko">
       <head>
         <meta name="naver-site-verification" content="103859e91915ff64b87f9496cb9fe2188d86d8d8" />
+        <meta name="msvalidate.01" content="2E8E822334A1673278BB491BB72FAF20" />
         <Script
           src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6731103569114139"
           crossOrigin="anonymous"
